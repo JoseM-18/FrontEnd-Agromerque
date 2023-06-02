@@ -1,0 +1,4 @@
+npm i - g react-scripts
+npm i cors
+npm i @mui/material @emotion/react @emotion/styled
+npm i @mui/icons-material
