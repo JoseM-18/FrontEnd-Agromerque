@@ -1,16 +1,25 @@
 import React from 'react'
-import "./LoginForm.css"
-
+import "./css/LoginForm.css"
+import {Button,TextField} from '@mui/material'
 function LoginForm() {
   return (
     <div className="login">
       <div className="cover">
-          <h1>Login</h1>
-
-          <input type='text' placeholder='Username' />
-          <input type='password' placeholder='Password' />
-
-          <div className="login-btn">Login</div>
+          <h1>Iniciar Sesión en AgroMerque</h1>
+          <div className='inputs'>
+          <TextField
+            label="Username"
+            variant="outlined"
+            className='camposTextos'
+          />
+          <TextField
+            label="Password"
+            variant="outlined"
+            type="password"
+            className='camposTextos'
+          />
+          </div>
+          <Button variant="contained" color="success">Entrar</Button>
       </div>
     </div>
   )
