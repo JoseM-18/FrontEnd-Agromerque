@@ -2,7 +2,6 @@
   background-color: green;
   display: flex;
   justify-content: space-between;
-  
 }
 
 .nombreTool{
@@ -10,8 +9,6 @@
   font-size: 1.5em;
   font-weight: bold;
   flex-grow: inherit;
-  
-
 }
 
 .botones{

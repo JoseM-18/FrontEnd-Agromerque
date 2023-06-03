@@ -18,12 +18,12 @@ function Navbar() {
         </Typography>
           <Search />
         <dev className='botones'>
-        <Link href="/login" >
-          <Button  variant="contained" color="success">Iniciar Sesión</Button>
+          <Link href="/login" >
+            <Button  variant="contained" color="success">Iniciar Sesión</Button>
+            </Link>
+          <Link href="/register"  >
+            <Button variant="contained" color="success">Registrarse</Button>
           </Link>
-        <Link href="/register"  >
-          <Button variant="contained" color="success">Registrarse</Button>
-        </Link>
         </dev>
       </Toolbar>
     </AppBar>
