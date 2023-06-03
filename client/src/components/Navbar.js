@@ -1,6 +1,6 @@
 import React from 'react'
 import "./css/Navbar.css"
-import {AppBar, Toolbar, Typography, Button, Link,Container} from '@mui/material'
+import {AppBar, Toolbar, Typography, Button, Link,Container, Box} from '@mui/material'
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
@@ -11,23 +11,22 @@ import DirectionsIcon from '@mui/icons-material/Directions';
 
 function Navbar() {
   return (
-    <AppBar position="fixed">
-      <Toolbar className='toolbar' >
-        <Typography className='nombreTool' variant="h6"  >
-          AgroMerque
-        </Typography>
+      <AppBar position="fixed">
+        <Toolbar className='toolbar' >
+          <Typography className='nombreTool' variant="h6"  >
+            AgroMerque
+          </Typography>
           <Search />
-        <dev className='botones'>
-          <Link href="/login" >
-            <Button  variant="contained" color="success">Iniciar Sesión</Button>
+          <dev className='botones'>
+            <Link href="/login" >
+              <Button  variant="contained" color="success">Iniciar Sesión</Button>
+              </Link>
+            <Link href="/register"  >
+              <Button variant="contained" color="success">Registrarse</Button>
             </Link>
-          <Link href="/register"  >
-            <Button variant="contained" color="success">Registrarse</Button>
-          </Link>
-        </dev>
-      </Toolbar>
-    </AppBar>
-
+          </dev>
+        </Toolbar>
+      </AppBar>
   )
 }
 
