@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import StarIcon from '@mui/icons-material/Star';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import "./css/Target.css"
 
@@ -23,6 +24,13 @@ function Target() {
           <Typography variant="body2" color="text.secondary">
             Esta es la maravillosa descripcion que tendra el producto dependiendo de la base de datos
           </Typography>
+          
+          <StarIcon style={{ color: 'yellow' }}/>
+          <StarIcon style={{ color: 'yellow' }}/>
+          <StarIcon style={{ color: 'yellow' }}/>
+          <StarIcon style={{ color: 'yellow' }}/>
+          <StarIcon style={{ color: 'yellow' }}/>
+
         </CardContent>
       </CardActionArea>
       <CardActions style={

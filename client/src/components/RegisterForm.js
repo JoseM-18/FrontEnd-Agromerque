@@ -1,34 +1,48 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import DatePicker from '@mui/lab/DatePicker';
-import { useState } from 'react';
-
+import { useState,useEffect } from 'react';
 
 function RegisterForm() {
 
-  const [selectedDate, setSelectedDate] = useState(null)
+
+
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Lógica para manejar el envío del formulario de registro
+    console.log(signin)
     
   };
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const [signin, setsignin] = useState({
+    Username: "",
+    Password: "",
+  })
+
+
+  const handleChange = event=> {
+
+    setsignin({
+      ...signin,
+      [event.target.name]: event.target.value,
+    });
   };
-    
+ 
   
   return (
     <div className="register">
       <h1>Registro</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
+        
+        
         <TextField
           label="Nombre"
           variant="outlined"
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
 
         <TextField
@@ -36,6 +50,7 @@ function RegisterForm() {
           variant="outlined"
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
 
         <TextField
@@ -44,6 +59,7 @@ function RegisterForm() {
           type='number'
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
 
         <TextField
@@ -51,15 +67,7 @@ function RegisterForm() {
           variant="outlined"
           fullWidth
           margin="normal"
-        />
-        
-        <DatePicker
-          label="Fecha de nacimiento"
-          value={selectedDate}
-          onChange={handleDateChange}
-          renderInput={(params) => <TextField {...params} variant="outlined" margin="normal" />}
-          margin="normal"
-          fullWidth
+          style={textFieldStyle}
         />
        
         <TextField
@@ -67,6 +75,7 @@ function RegisterForm() {
           variant="outlined"
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
         <TextField
           label="Contraseña"
@@ -74,6 +83,7 @@ function RegisterForm() {
           type="password"
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
         <TextField
           label="Confirmar Contraseña"
@@ -81,6 +91,7 @@ function RegisterForm() {
           type="password"
           fullWidth
           margin="normal"
+          style={textFieldStyle}
         />
         <Button type="submit" variant="contained" color="primary">
           Registrarse
@@ -89,5 +100,10 @@ function RegisterForm() {
     </div>
   );
 }
+
+const textFieldStyle = {
+  width: '50%',
+  margin: '10px 3px',
+};
 
 export default RegisterForm;
