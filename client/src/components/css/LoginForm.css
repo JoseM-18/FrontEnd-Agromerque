@@ -52,3 +52,15 @@
     height: 4em;
     size: 4em;
 }
+
+.blur-background {
+    backdrop-filter: blur(5px); /* Aplica el efecto de desenfoque */
+    background-color: rgba(0, 0, 0, 0.5); /* Ajusta el color y la opacidad del fondo */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999; /* Asegura que el fondo borroso esté en la parte superior */
+  }
+  

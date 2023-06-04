@@ -6,19 +6,43 @@ import { useState,useEffect } from 'react';
 function RegisterForm() {
 
 
-
-  
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Lógica para manejar el envío del formulario de registro
+    if(signin.password !== signin.confirmPassword){
+      alert("Las contraseñas no coinciden")
+      return
+    }
     console.log(signin)
-    
+    // Lógica para manejar el envío del formulario de registro
+    const res = await fetch('http://localhost:4000/signup', {
+      method: 'POST',
+      body: JSON.stringify(signin),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const date = await res.json()
+    console.log(date)
+    console.log(date.message)
+    if(date.message === 'user created successfully'){
+      alert(date.message)
+      window.location.href = '/login'
+    }else if(date.message === 'user already exists'){
+      alert(date.message)
+    }
   };
 
   const [signin, setsignin] = useState({
-    Username: "",
-    Password: "",
+    name: "",
+    lastname: "",
+    phone: "",
+    address: "",
+    email: "",
+    birthdate: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    
   })
 
 
@@ -43,6 +67,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='name'
+          onChange={handleChange}
+          
         />
 
         <TextField
@@ -51,6 +78,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='lastname'
+          onChange={handleChange}
+
         />
 
         <TextField
@@ -60,6 +90,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='phone'
+          onChange={handleChange}
+
         />
 
         <TextField
@@ -68,6 +101,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='address'
+          onChange={handleChange}
+
         />
        
         <TextField
@@ -76,7 +112,34 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='email'
+          onChange={handleChange}
+
         />
+
+        <TextField 
+        label = "Fecha de nacimiento"
+        variant = "outlined"
+        type = "date"
+        InputLabelProps = {{shrink: true}}
+        margin = "normal"
+        style = {{width: '50%', margin: '10px 3px'}}
+        name='birthdate'
+        onChange={handleChange}
+
+        />
+
+        <TextField
+          label="Nombre de usuario"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          style={textFieldStyle}
+          name='username'
+          onChange={handleChange}
+
+        />
+
         <TextField
           label="Contraseña"
           variant="outlined"
@@ -84,6 +147,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='password'
+          onChange={handleChange}
+
         />
         <TextField
           label="Confirmar Contraseña"
@@ -92,6 +158,9 @@ function RegisterForm() {
           fullWidth
           margin="normal"
           style={textFieldStyle}
+          name='confirmPassword'
+          onChange={handleChange}
+
         />
         <Button type="submit" variant="contained" color="primary">
           Registrarse
