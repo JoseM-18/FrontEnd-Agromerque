@@ -2,10 +2,23 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState,useEffect } from 'react';
+import { Snackbar } from '@mui/material';
 
 function RegisterForm() {
 
+  const [open, setOpen] = useState(false);
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  
+
+  /**
+   * funcion que se ejecuta cuando se envia el formulario
+   * @param {*} event 
+   * @returns 
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
     if(signin.password !== signin.confirmPassword){
@@ -13,6 +26,7 @@ function RegisterForm() {
       return
     }
     console.log(signin)
+
     // Lógica para manejar el envío del formulario de registro
     const res = await fetch('http://localhost:4000/signup', {
       method: 'POST',
@@ -24,14 +38,18 @@ function RegisterForm() {
     const date = await res.json()
     console.log(date)
     console.log(date.message)
-    if(date.message === 'user created successfully'){
+    if(date.message === 'User created'){
       alert(date.message)
       window.location.href = '/login'
+      setOpen(true);
     }else if(date.message === 'user already exists'){
       alert(date.message)
     }
   };
 
+  /**
+   * constante que guarda los datos del formulario
+   */
   const [signin, setsignin] = useState({
     name: "",
     lastname: "",
@@ -46,6 +64,10 @@ function RegisterForm() {
   })
 
 
+  /**
+   * constante que se ejecuta cuando se cambia el valor de un input
+   * @param {*} event 
+   */
   const handleChange = event=> {
 
     setsignin({
@@ -165,6 +187,14 @@ function RegisterForm() {
         <Button type="submit" variant="contained" color="primary">
           Registrarse
         </Button>
+
+        <Snackbar
+        open={open}
+        onClose={handleClose}
+        message="Usuario creado exitosamente"
+        autoHideDuration={3000}
+        />
+
       </form>
     </div>
   );
