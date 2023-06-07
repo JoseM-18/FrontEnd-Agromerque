@@ -5,4 +5,4 @@ npm i @mui/icons-material
 npm i @mui/lab
 npm install @mui/x-date-pickers
 npm install dayjs
-
+npm install @mui/core

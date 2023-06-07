@@ -3,6 +3,7 @@ import LoginForm from './components/LoginForm'
 import Navbar from './components/Navbar'
 import RegisterForm from './components/RegisterForm'
 import Target from './components/Target'
+import ShoppingCart from './components/ShoppingCart'
 import { Container } from '@mui/material'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={ <Target /> } />
           <Route path="/login" element={ <LoginForm /> } />
           <Route path= "/register" element ={<RegisterForm/>}/>
+          <Route path= "/cart" element={<ShoppingCart/>} />
         </Routes> 
       </Container>
     </BrowserRouter>
