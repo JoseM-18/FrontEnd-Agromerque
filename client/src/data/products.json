@@ -1,0 +1,86 @@
+{
+    "productos": [
+      {
+        "idProducto": 1,
+        "nombre": "Manzanas",
+        "precio": 2.5,
+        "stock": 50,
+        "categoria": "Frutas",
+        "imagen": "https://t1.uc.ltmcdn.com/es/posts/6/6/4/que_vitaminas_tiene_la_manzana_51466_orig.jpg"
+      },
+      {
+        "idProducto": 2,
+        "nombre": "Tomates",
+        "precio": 1.8,
+        "stock": 30,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/tomates.jpg"
+      },
+      {
+        "idProducto": 3,
+        "nombre": "Zanahorias",
+        "precio": 0.9,
+        "stock": 70,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/zanahorias.jpg"
+      },
+      {
+        "idProducto": 4,
+        "nombre": "Papas",
+        "precio": 1.2,
+        "stock": 100,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/papas.jpg"
+      },
+      {
+        "idProducto": 5,
+        "nombre": "Fresas",
+        "precio": 3.0,
+        "stock": 20,
+        "categoria": "Frutas",
+        "imagen": "https://url_imagen_nube.com/fresas.jpg"
+      },
+      {
+        "idProducto": 6,
+        "nombre": "Lechuga",
+        "precio": 1.5,
+        "stock": 40,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/lechuga.jpg"
+      },
+      {
+        "idProducto": 7,
+        "nombre": "Uvas",
+        "precio": 2.8,
+        "stock": 15,
+        "categoria": "Frutas",
+        "imagen": "https://url_imagen_nube.com/uvas.jpg"
+      },
+      {
+        "idProducto": 8,
+        "nombre": "Pimientos",
+        "precio": 1.7,
+        "stock": 25,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/pimientos.jpg"
+      },
+      {
+        "idProducto": 9,
+        "nombre": "Naranjas",
+        "precio": 2.0,
+        "stock": 60,
+        "categoria": "Frutas",
+        "imagen": "https://url_imagen_nube.com/naranjas.jpg"
+      },
+      {
+        "idProducto": 10,
+        "nombre": "Calabazas",
+        "precio": 1.4,
+        "stock": 10,
+        "categoria": "Hortalizas",
+        "imagen": "https://url_imagen_nube.com/calabazas.jpg"
+      }
+    ]
+  }
+
+  
