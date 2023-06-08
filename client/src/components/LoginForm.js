@@ -15,7 +15,7 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Lógica para manejar el envío del formulario de registro
-    console.log(login)
+   
     const res = await fetch('http://localhost:4000/signin', {
       method: 'POST',
       body: JSON.stringify(login),
@@ -26,6 +26,7 @@ function LoginForm() {
     const date = await res.json()
 
     console.log(date.message)
+
 
     setUsernameIncorrect(false)
     setPasswordIncorrect(false)
