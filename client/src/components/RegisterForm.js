@@ -12,8 +12,6 @@ function RegisterForm() {
     setOpen(false);
   };
 
-  
-
   /**
    * funcion que se ejecuta cuando se envia el formulario
    * @param {*} event 
@@ -25,27 +23,44 @@ function RegisterForm() {
       alert("Las contraseñas no coinciden")
       return
     }
+    const empyField = Object.values(signin).some((value) => value === "")
+
+    if(empyField){
+      alert("Por favor, llene todos los campos")
+      return
+    }
+
     console.log(signin)
 
-    // Lógica para manejar el envío del formulario de registro
-    const res = await fetch('http://localhost:4000/signup', {
-      method: 'POST',
-      body: JSON.stringify(signin),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const date = await res.json()
-    console.log(date)
+    try{
+
+      // Lógica para manejar el envío del formulario de registro
+      const res = await fetch('http://localhost:4000/signup', {
+        method: 'POST',
+        body: JSON.stringify(signin),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const date = await res.json()
+      console.log(date)
     console.log(date.message)
     if(date.message === 'User created'){
       alert(date.message)
       window.location.href = '/login'
       setOpen(true);
-    }else if(date.message === 'user already exists'){
+    }
+    if(date.message === 'user already exists'){
       alert(date.message)
     }
-  };
+
+    if(date.message === "Please. Send all data"){
+      alert(date.message)
+    }
+  }catch(error){
+    console.log(error)
+  }
+};
 
   /**
    * constante que guarda los datos del formulario

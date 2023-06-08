@@ -64,3 +64,12 @@
     z-index: 9999; /* Asegura que el fondo borroso esté en la parte superior */
   }
   
+  .dialog-container {
+    position: relative;
+    z-index: 99999; 
+    
+  }
+
+  
+  
+  

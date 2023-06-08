@@ -3,12 +3,15 @@ import { Button, TextField } from '@mui/material'
 import "./css/LoginForm.css"
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router-dom'
-
+import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@mui/material'
 
 function LoginForm() {
   const navigate = useNavigate()
   //se conecta con el backend para verificar si el usuario existe
-  
+
+  const [passwordIncorrect, setPasswordIncorrect] = useState(false)
+  const [usernameIncorrect, setUsernameIncorrect] = useState(false)
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Lógica para manejar el envío del formulario de registro
@@ -22,10 +25,27 @@ function LoginForm() {
     })
     const date = await res.json()
 
+    console.log(date.message)
+
+    setUsernameIncorrect(false)
+    setPasswordIncorrect(false)
+
     if (date.token) {
       localStorage.setItem('token', date.token)
       navigate('/')
+      window.location.reload()
     }
+    
+    if(date.message === 'invalid access, verify your username'){
+      setUsernameIncorrect(true)
+    }
+    
+    if(date.message === 'Invalid Password'){
+      setPasswordIncorrect(true)
+    }
+
+
+
     console.log(date)
   };
 
@@ -57,8 +77,10 @@ function LoginForm() {
             <TextField
               label="username"
               variant="outlined"
-              className='camposTextos'
+              className={`camposTextos ${usernameIncorrect ? 'error' : ''}`}
               name="username"
+              error={usernameIncorrect}
+              helperText={usernameIncorrect && 'Usuario incorrecto'}
               onChange={handleChange}
             />
 
@@ -66,18 +88,26 @@ function LoginForm() {
               label="password"
               variant="outlined"
               type="password"
-              className='camposTextos'
+              className={`camposTextos ${passwordIncorrect ? 'error' : ''}`}
               name="password"
+              error={passwordIncorrect}
+              helperText={passwordIncorrect && 'Contraseña incorrecta'}
               onChange={handleChange}
             />
 
-
             <Button variant="contained" color="success" type='submit'>Entrar</Button>
-          </div>
+
+          </div> 
         </form>
+            
       </div>
+       
+           
+            
     </div>
   )
 }
 
-export default LoginForm
+
+
+export default LoginForm 

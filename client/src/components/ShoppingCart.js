@@ -3,6 +3,7 @@ import style from './css/cart.css';
 import { Card, CardContent, Table, TableContainer, Typography, Button, Badge } from '@mui/material';
 import { useNavigate } from 'react-router'
 
+
 function Cart() {
 
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ function Cart() {
 
     const token = localStorage.getItem('token')
 
-    const res = await fetch('http://localhost:4000/shoppingCartProduct/:' + token, {
+    const res = await fetch('http://localhost:4000/shoppingCartProduct/:', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -29,7 +30,7 @@ function Cart() {
 
       <Card>
         <CardContent>
-          {/* Contenido de la tarjeta */}
+          { /* Contenido del carrito */}
         </CardContent>
       </Card>
 
