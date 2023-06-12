@@ -1,17 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import "./css/Target.css"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 
 function Target({ products }) {
+
+  const [amount, setamount] = useState(1)
   const navigate = useNavigate()
 
- 
+  const token = localStorage.getItem('token')
+
+
+  const setCount = (idProduct, value) => {
+    console.log(idProduct, value)
+    setamount((prevamount) => ({
+      ...prevamount,
+      [idProduct]: value
+    }))
+  }
+
+
+  const addProduct = async (idProduct, amount) => {
+    const response = await fetch(`http://localhost:4000/shoppingCartProduct/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token
+      }
+      , body: JSON.stringify({
+        idProduct,
+        amount
+      })
+    })
+    console.log(idProduct)
+
+    const data = await response.json()
+    console.log(data)
+    if (data.message === 'Product added successfully') {
+      navigate('/shoppingCart')
+    }
+
+    if (data.message === 'Product already exists') {
+      navigate('/shoppingCart')
+    }
+
+    if (data.message === "Unauthorized!") {
+      navigate('/login')
+    }
+  }
+
+
   return (
     <div className='Body' >
       <Card className='card' sx={{ maxWidth: 800 }}>
@@ -53,12 +96,22 @@ function Target({ products }) {
             <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}
               className='cardActions'
             >
-              <Button size="small" color="primary">
+              <div className="quantity-container">
+                <input
+                  type="number"
+                  value={amount[product.idProduct] || 1}
+                  onChange={(e) => setCount(product.idProduct, e.target.value)}
+                />
+              </div>
+              <Button color="primary" onClick={() => {
+                const productAmount = amount[product.idProduct] || 1;
+                addProduct(product.idProduct, productAmount)
+              }} >
                 Añadir al carrito
               </Button>
 
               <Button size="small" color="primary"
-                /*onClick={() => navigate(`/product/${product.idProduct}`)}*/
+              /*onClick={() => navigate(`/product/${product.idProduct}`)}*/
               >
                 Info
               </Button>
@@ -73,6 +126,8 @@ function Target({ products }) {
 
   )
 }
+
+
 
 
 

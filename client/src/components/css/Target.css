@@ -17,3 +17,8 @@
     gap: 1rem;
  }
  
+ .quantity-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
