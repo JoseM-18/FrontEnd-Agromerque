@@ -1,12 +1,19 @@
 {
     "productos": [
       {
-        "idProducto": 1,
-        "nombre": "Manzanas",
+        "idProduct": 1,
+        "name": "Manzanas",
         "precio": 2.5,
         "stock": 50,
-        "categoria": "Frutas",
-        "imagen": "https://t1.uc.ltmcdn.com/es/posts/6/6/4/que_vitaminas_tiene_la_manzana_51466_orig.jpg"
+        "category": "Frutas",
+        "image": "https://t1.uc.ltmcdn.com/es/posts/6/6/4/que_vitaminas_tiene_la_manzana_51466_orig.jpg",
+        "purchasePrice": 1,
+        "salePrice":2,
+        "color": "Rojo",
+        "size": "Mediano",
+        "description": "Manzana de color rojo intenso, de sabor dulce y textura crujiente.",
+        "weight":2,
+        "harvestDate":"10-10-2019"
       },
       {
         "idProducto": 2,
@@ -18,10 +25,14 @@
       },
       {
         "idProducto": 3,
-        "nombre": "Zanahorias",
-        "precio": 0.9,
+        "name": "Zanahorias",
+        "purchasePrice": 0.9,
+        "salePrice":1.5,
         "stock": 70,
+        "color": "Naranja",
+        "size": "Mediano",
         "categoria": "Hortalizas",
+        "description": "Zanahoria de color naranja intenso, de sabor dulce y textura crujiente.",
         "imagen": "https://mejorconsalud.as.com/wp-content/uploads/2015/08/comer-muchas-zanahorias.jpg"
       },
       {

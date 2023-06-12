@@ -15,26 +15,27 @@ function LoginForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Lógica para manejar el envío del formulario de registro
-   
-    const res = await fetch('http://localhost:4000/signin', {
-      method: 'POST',
-      body: JSON.stringify(login),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const date = await res.json()
+    try{
 
-    console.log(date.message)
-
-
-    setUsernameIncorrect(false)
-    setPasswordIncorrect(false)
-
-    if (date.token) {
-      localStorage.setItem('token', date.token)
-      navigate('/')
-      window.location.reload()
+      const res = await fetch('http://localhost:4000/signin', {
+        method: 'POST',
+        body: JSON.stringify(login),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const date = await res.json()
+      
+      console.log(date.message)
+      
+      
+      setUsernameIncorrect(false)
+      setPasswordIncorrect(false)
+      
+      if (date.token) {
+        localStorage.setItem('token', date.token)
+        navigate('/')
+        window.location.reload()
     }
     
     if(date.message === 'invalid access, verify your username'){
@@ -44,12 +45,13 @@ function LoginForm() {
     if(date.message === 'Invalid Password'){
       setPasswordIncorrect(true)
     }
-
-
-
-    console.log(date)
-  };
-
+ }catch(error){
+    //mostrar una ventana usando dialog
+    alert("Error al iniciar sesión")
+ } 
+    
+};
+  
   //constante que guarda los datos del formulario
   const [login, setlogin] = useState({
     username: "",

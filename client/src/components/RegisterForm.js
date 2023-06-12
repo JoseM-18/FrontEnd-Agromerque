@@ -12,6 +12,7 @@ function RegisterForm() {
     setOpen(false);
   };
 
+
   /**
    * funcion que se ejecuta cuando se envia el formulario
    * @param {*} event 
@@ -59,6 +60,7 @@ function RegisterForm() {
     }
   }catch(error){
     console.log(error)
+    alert("Error al crear el usuario")
   }
 };
 

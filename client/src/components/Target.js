@@ -7,28 +7,33 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import "./css/Target.css"
 
 function Target({ products }) {
+  
+  
+
   return (
     
     <div className='Body'>
       <Card className='card' sx={{ maxWidth: 800 }}>
-
+        
         {products.map((product) => (
-            
+
           <div className='content'>
 
             <CardActionArea>
 
               <CardMedia
-                sx={{ height: 200 }}
+                sx={{ height: 140 }}
                 component="img"
-                alt= { product.nombre }
-                image= { product.imagen } />
+                alt= { product.name }
+                image= { product.image }
+                 />
 
               <CardContent>
 
                 <Typography gutterBottom variant="h5" component="div">
-                  { product.nombre }
+                  { product.name }
                 </Typography>
+                
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
@@ -36,7 +41,7 @@ function Target({ products }) {
                   </Typography>
 
                   <Typography variant="body2" color="text.secondary">
-                    { product.precio } $
+                    { product.salePrice } $
                   </Typography>
                 </div>
 
