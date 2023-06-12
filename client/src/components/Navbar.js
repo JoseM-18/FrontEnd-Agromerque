@@ -14,16 +14,21 @@ import jwt_decode from 'jwt-decode';
 
 
 function Navbar() {
+  
   const navigate = useNavigate()
   const [isLogged, setIsLogged] = React.useState(false)
   const [isAdmin, setIsAdmin] = React.useState(false)
+  const [username, setUserName] = React.useState("")
 
   // define el estado de isLogged si hay un token en el localstorage
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
       setIsLogged(true)
+
       const token = localStorage.getItem('token')
       const decoded = jwt_decode(token)
+      const username = decoded.username
+      setUserName(username)
       console.log(decoded.role)
       if (decoded.role === 'Admin') {
 
@@ -54,24 +59,32 @@ function Navbar() {
 
         {isLogged ? (
           <>
-          
-          {isAdmin ? (
-            <IconButton color="inherit" onClick={() => navigate('/admin')} >
-              <Typography variant='body-1' fontSize="14px">
-                Agregar Producto
-              </Typography>
-            </IconButton>
-          )
-          : ( 
-          
-          <IconButton color="inherit" onClick={() => navigate('/cart')}>
-              <ShoppingCartIcon />
-              <Typography variant='body-1' fontSize="14px">
-                Carrito
-              </Typography>
-            </IconButton>
 
-          )}
+            {isAdmin ? (
+              <IconButton color="inherit" onClick={() => navigate('/admin')} >
+                <Typography variant='body-1' fontSize="14px">
+                  Agregar Producto
+                </Typography>
+              </IconButton>
+            )
+              : (
+
+                <IconButton color="inherit" onClick={() => navigate('/cart')}>
+                  <ShoppingCartIcon />
+                  <Typography variant='body-1' fontSize="14px">
+                    Carrito
+                  </Typography>
+                </IconButton>
+
+              )}
+            <IconButton color="inherit" onClick={() => navigate('/profile')}>
+              <Typography variant='body-1' fontSize="14px">
+                Hola {username}
+                <br/>
+                Ver Perfil
+              </Typography>
+            </IconButton>
+            
             <IconButton color="inherit" onClick={handleLogout}>
               <LogoutIcon />
               <Typography variant='body-1' fontSize="14px">
@@ -81,11 +94,10 @@ function Navbar() {
           </>
         ) : (
           <>
-            <dev className='botones'>
               <Button variant="contained" color="success" onClick={() => navigate('/login')}>Iniciar Sesión</Button>
               <Button variant="contained" color="success" onClick={() => navigate('/register')}
               >Registrarse</Button>
-            </dev>
+        
           </>
         )}
       </Toolbar>
@@ -97,120 +109,89 @@ function Navbar() {
 
 function Search() {
 
-  
+
   const [name, setName] = React.useState(
     { name: '' }
-    );
- 
-    const { productos, setProductos } = useContext(productContext);
-    const handleSubmit = async (event) => {
+  );
+
+  const { productos, setProductos } = useContext(productContext);
+  const handleSubmit = async (event) => {
     //event.preventDefault();
 
-        try{
+    try {
 
-          const url = `http://localhost:4000/product/name/${encodeURIComponent(name.name)}`;
-          
-          const res = await fetch(url, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          })
+      const url = `http://localhost:4000/product/name/${encodeURIComponent(name.name)}`;
 
-          if (res.status === 400) {
-            console.log("error") 
-          }
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
 
-          if (res.status === 404) {
-            alert("Producto no encontrado")
-            return
-          }
+      if (res.status === 400) {
+        console.log("error")
+      }
 
-          const data = await res.json()
-          setProductos(data)
-          console.log(data)
-        }catch(error){
-          console.log(error)
-          alert("ups, algo salio mal")
-        }     
-          
+      if (res.status === 404) {
+        alert("Producto no encontrado")
+        return
+      }
+
+      const data = await res.json()
+      setProductos(data)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+      alert("ups, algo salio mal")
+    }
+
   };
 
-    const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        if (name.name === '') {
-          return alert('Ingrese un producto')
-        }
-        handleSubmit();
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (name.name === '') {
+        return alert('Ingrese un producto')
       }
-    };
+      handleSubmit();
+    }
+  };
 
-    const handleChange = (event) => {
-      setName({
-        ...name,
-        [event.target.name]: event.target.value
-      });
-    };
+  const handleChange = (event) => {
+    setName({
+      ...name,
+      [event.target.name]: event.target.value
+    });
+  };
 
-    return (
+  return (
 
-      <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
-        <TextField
-          sx={{ flex: 1 }}
-          placeholder="Busca nuestros productos"
-          inputProps={{ 'aria-label': 'Busca nuestros productos' }}
-          name="name"
-          onChange={handleChange}
-          onKeyDown={handleKeyPress}
-          variant="standard"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleSubmit}>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-      </Paper>
-    );
+    <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
+      <TextField
+        sx={{ flex: 1 }}
+        placeholder="Busca nuestros productos"
+        inputProps={{ 'aria-label': 'Busca nuestros productos' }}
+        name="name"
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+        variant="standard"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleSubmit}>
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+      />
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+    </Paper>
+  );
 
-  }
-
-
-
-  function FilterBy() {
-
-    const [selectedOption, setSelectedOption] = React.useState('');
-
-    const handleChange = (event) => {
-      setSelectedOption(event.target.value);
-    };
-
-    return (
-      <dev className='filtro'>
-        <FormControl label="Outlined secondary" sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel>
-            Filtrar Por
-          </InputLabel>
-          <Select
-            labelId="filter-label"
-            id="filter-select"
-            value={selectedOption}
-            onChange={handleChange}
-          >
-            <MenuItem value="">Categoria</MenuItem>
-            <MenuItem value="option1">Nombre</MenuItem>
-            <MenuItem value="option2">id</MenuItem>
-          </Select>
-        </FormControl>
-      </dev>
-    );
-  }
+}
 
 
 
-  export default Navbar
+export default Navbar

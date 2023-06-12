@@ -1,8 +1,7 @@
-import React,{  useState, useEffect,useContext,createContext } from 'react'
-import style from './css/cart.css';
+import React,{  useState, useEffect,useContext } from 'react'
 import { Card, CardContent, Table, TableContainer, Typography, Button, Badge } from '@mui/material';
 import { productContext } from './ProductContext';
-
+import './css/ShoppingCart.css'
 function Cart(){
 
   const  { productos } = useContext(productContext);
@@ -55,8 +54,9 @@ function Cart(){
       <Typography variant="h6">Carrito de compras</Typography>
       {products.length > 0 ? (
         <TableContainer component={Card}>
-          <Table>
+          <Table className='infoProduct'>
             {products.map((product) => (
+              
               <CardContent key={product.idProduct}>
                 <Typography>{product.name}</Typography>
                 <Typography>{product.salePrice}</Typography>

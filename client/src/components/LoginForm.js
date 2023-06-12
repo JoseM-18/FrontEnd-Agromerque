@@ -3,7 +3,6 @@ import { Button, TextField } from '@mui/material'
 import "./css/LoginForm.css"
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router-dom'
-import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@mui/material'
 
 function LoginForm() {
   const navigate = useNavigate()
@@ -45,6 +44,11 @@ function LoginForm() {
     if(date.message === 'Invalid Password'){
       setPasswordIncorrect(true)
     }
+
+    if(date.message === "Please. Send all data"){
+      alert(date.message)
+    }
+    
  }catch(error){
     //mostrar una ventana usando dialog
     alert("Error al iniciar sesión")
@@ -97,8 +101,9 @@ function LoginForm() {
               helperText={passwordIncorrect && 'Contraseña incorrecta'}
               onChange={handleChange}
             />
-
+          
             <Button variant="contained" color="success" type='submit'>Entrar</Button>
+            <Button variant="contained" color="success" type='submit' onClick={() => navigate('/')}>Cancelar</Button>
 
           </div> 
         </form>

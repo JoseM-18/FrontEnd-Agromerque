@@ -13,12 +13,12 @@ function Target({ products }) {
 
  
   return (
-    <div className='Body'>
+    <div className='Body' >
       <Card className='card' sx={{ maxWidth: 800 }}>
 
         {products.map((product) => (
 
-          <div className='content'>
+          <div className='content' key={product.idProduct}>
 
             <CardActionArea>
 
