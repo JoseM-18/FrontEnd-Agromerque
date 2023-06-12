@@ -62,14 +62,16 @@ function Navbar() {
               </Typography>
             </IconButton>
           )
-          : null}
-            
-            <IconButton color="inherit" onClick={() => navigate('/cart')}>
+          : ( 
+          
+          <IconButton color="inherit" onClick={() => navigate('/cart')}>
               <ShoppingCartIcon />
               <Typography variant='body-1' fontSize="14px">
                 Carrito
               </Typography>
             </IconButton>
+
+          )}
             <IconButton color="inherit" onClick={handleLogout}>
               <LogoutIcon />
               <Typography variant='body-1' fontSize="14px">
@@ -99,9 +101,7 @@ function Search() {
   const [name, setName] = React.useState(
     { name: '' }
     );
-    
-    
-    
+ 
     const { productos, setProductos } = useContext(productContext);
     const handleSubmit = async (event) => {
     //event.preventDefault();
@@ -132,9 +132,7 @@ function Search() {
         }catch(error){
           console.log(error)
           alert("ups, algo salio mal")
-        }
-
-          
+        }     
           
   };
 

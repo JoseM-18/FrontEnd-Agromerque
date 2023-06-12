@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Snackbar } from '@mui/material';
 
 function RegisterForm() {

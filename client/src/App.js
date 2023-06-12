@@ -5,10 +5,12 @@ import RegisterForm from './components/RegisterForm'
 import Body from './components/Body'
 import ShoppingCart from './components/ShoppingCart'
 import ProductForm from './components/ProductForm'
+import ProductDetail from './components/ProductDetail'
 import { Container } from '@mui/material'
 import { ProductProvider  } from './components/ProductContext';
 import React, { useEffect, useState } from 'react';
 import { productContext } from './components/ProductContext';
+
 
 function App() {
 
@@ -39,6 +41,7 @@ useEffect(() => {
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/cart" element={<ShoppingCart />} />
             <Route path="/admin" element={<ProductForm/>}></Route>
+            <Route path= "/product/:id" element={<ProductDetail/>}></Route>
             <Route path="*" element={<h1>Not Found 404</h1>} />
             
           </Routes>
