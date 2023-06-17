@@ -11,18 +11,19 @@ import { TextField, FormControl, InputLabel, Select, MenuItem, InputBase, styled
 import InputAdornment from '@mui/material/InputAdornment';
 import { productContext } from './ProductContext';
 import jwt_decode from 'jwt-decode';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 function Navbar() {
-  
+
   const navigate = useNavigate()
   const [isLogged, setIsLogged] = React.useState(false)
   const [isAdmin, setIsAdmin] = React.useState(false)
   const [username, setUserName] = React.useState("")
-
+  const [isLoading, setIsLoading] = React.useState(true)
   // define el estado de isLogged si hay un token en el localstorage
   React.useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {  
       setIsLogged(true)
 
       const token = localStorage.getItem('token')
@@ -34,78 +35,92 @@ function Navbar() {
 
         setIsAdmin(true)
       }
+
     }
+
+    setIsLoading(false)
+
   }, [])
 
 
   const handleLogout = () => {
     setIsLogged(false)
     localStorage.removeItem('token')
+    localStorage.removeItem('productsCart')
     navigate('/')
+
     window.location.reload()
   }
 
 
   return (
-    <AppBar position="fixed">
-      <Toolbar className='toolbar' >
-        <Typography className='nombreTool' variant="h6"  >
-          <Link href="/" className='title' style={{ textDecoration: "none", color: "white" }}>
-            AgroMerque
-          </Link>
-        </Typography>
+    <div className='root'>
+      {isLoading ? (
+        <div className='loading'>
+          <CircularProgress />
+        </div>
+      ) : (
+        <AppBar position="fixed">
+          <Toolbar className='toolbar' >
+            <Typography className='nombreTool' variant="h6"  >
+              <Link href="/" className='title' style={{ textDecoration: "none", color: "white" }}>
+                AgroMerque
+              </Link>
+            </Typography>
 
-        <Search />
+            <Search />
 
-        {isLogged ? (
-          <>
+            {isLogged ? (
+              <>
 
-            {isAdmin ? (
-              <IconButton color="inherit" onClick={() => navigate('/admin')} >
-                <Typography variant='body-1' fontSize="14px">
-                  Agregar Producto
-                </Typography>
-              </IconButton>
-            )
-              : (
+                {isAdmin ? (
+                  <IconButton color="inherit" onClick={() => navigate('/admin')} >
+                    <Typography variant='body-1' fontSize="14px">
+                      Agregar Producto
+                    </Typography>
+                  </IconButton>
+                )
+                  : (
 
-                <IconButton color="inherit" onClick={() => navigate('/cart')}>
-                  <ShoppingCartIcon />
+                    <IconButton color="inherit" onClick={() => navigate('/cart')}>
+                      <ShoppingCartIcon />
+                      <Typography variant='body-1' fontSize="14px">
+                        Carrito
+                      </Typography>
+                    </IconButton>
+
+                  )}
+                <IconButton color="inherit" onClick={() => navigate('/profile')}>
                   <Typography variant='body-1' fontSize="14px">
-                    Carrito
+                    Hola {username}
+                    <br />
+                    Ver Perfil
                   </Typography>
                 </IconButton>
 
-              )}
-            <IconButton color="inherit" onClick={() => navigate('/profile')}>
-              <Typography variant='body-1' fontSize="14px">
-                Hola {username}
-                <br/>
-                Ver Perfil
-              </Typography>
-            </IconButton>
-            
-            <IconButton color="inherit" onClick={handleLogout}>
-              <LogoutIcon />
-              <Typography variant='body-1' fontSize="14px">
-                Cerrar Sesión
-              </Typography>
-            </IconButton>
-          </>
-        ) : (
-          <>
-              <Button variant="contained" color="success" onClick={() => navigate('/login')}>Iniciar Sesión</Button>
-              <Button variant="contained" color="success" onClick={() => navigate('/register')}
-              >Registrarse</Button>
-        
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+                <IconButton color="inherit" onClick={handleLogout}>
+                  <LogoutIcon />
+                  <Typography variant='body-1' fontSize="14px">
+                    Cerrar Sesión
+                  </Typography>
+                </IconButton>
+              </>
+            ) : (
+              <>
+                <Button variant="contained" color="success" onClick={() => navigate('/login')}>Iniciar Sesión</Button>
+                <Button variant="contained" color="success" onClick={() => navigate('/register')}
+                >Registrarse</Button>
 
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+      )}
 
+    </div>
   )
 }
+
 
 function Search() {
 

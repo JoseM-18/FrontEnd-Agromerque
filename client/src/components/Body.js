@@ -7,7 +7,7 @@ import { productContext } from './ProductContext';
 
 function Body() {
 
-    const {productos } = useContext(productContext);
+    const { productos } = useContext(productContext);
  
     return(
 

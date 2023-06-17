@@ -22,3 +22,13 @@
     justify-content: center;
     align-items: center;
  }
+
+.anadir{
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin-top: 1rem;
+      font-size: 0.1rem; /* Tamaño de fuente reducido */
+ }

@@ -70,17 +70,58 @@ function Userprofile() {
   return (
 
     <div className="container">
-      <TextField id="outlined-basic" label="Nombre" variant="outlined" value={name} onChange={(e) => setName(e.target.value)} />
-      <TextField id="outlined-basic" label="Apellido" variant="outlined" value={lastname} onChange={(e) => setLastname(e.target.value)} />
-      <TextField id="outlined-basic" label="Correo" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <TextField id="outlined-basic" label="Telefono" variant="outlined" value={phone} onChange={(e) => setPhone(e.target.value)} />
-      <TextField id="outlined-basic" label="Direccion" variant="outlined" value={address} onChange={(e) => setAddress(e.target.value)} />
-      <TextField id="outlined-basic" label="Contraseña" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button variant="contained" onClick={handleSubmit}>Actualizar</Button>
+      <div className="body">
+        <div className="form">
+          <form onSubmit={handleSubmit}>
+            <h1>Perfil de usuario</h1>
+            <TextField
+              id="outlined-basic"
+              label="Nombre"
+              variant="outlined"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Apellido"
+              variant="outlined"
+              value={lastname}
+              onChange={(event) => setLastname(event.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Correo"
+              variant="outlined"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Telefono"
+              variant="outlined"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Direccion"
+              variant="outlined"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Contraseña"
+              variant="outlined"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <Button variant="contained" type="submit">Actualizar</Button>
+          </form>
+        </div>
+      </div>
     </div>
   );
-
-
 }
 
 export default Userprofile;
