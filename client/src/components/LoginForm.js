@@ -15,6 +15,11 @@ function LoginForm() {
     event.preventDefault();
     // Lógica para manejar el envío del formulario de registro
     try{
+      
+      if(login.username === "" || login.password === ""){
+        alert("Por favor, llene todos los campos")
+        return
+      }
 
       const res = await fetch('http://localhost:4000/signin', {
         method: 'POST',
@@ -64,6 +69,7 @@ function LoginForm() {
   const location = useLocation()
   const showBlurBackground = location.pathname === '/login'
   const handleChange = event => {
+
 
     //introductir los datos del formulario en el estado
     setlogin({

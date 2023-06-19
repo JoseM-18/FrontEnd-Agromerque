@@ -39,6 +39,7 @@ function Checkout() {
     const productsInf = await cartInfo.json();
 
 
+
     const productsWithAmount = productsInf.map((product) => {
       const productInfo = productos.find((p) => p.idProduct === product.idProduct);
       console.log(productInfo);
@@ -155,9 +156,20 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
       body: JSON.stringify(payment)
 
     });
-   
+    
     const data = await response.json();
     console.log(data);
+
+    if(data.message ==="PaymentMethod created"){
+      alert("Pago realizado con exito");
+      onClose();
+    }
+
+    if(data.message === "PaymentMethod already exist"){
+      alert("El metodo de pago ya existe");
+      onClose();
+    }
+
   };
 
   

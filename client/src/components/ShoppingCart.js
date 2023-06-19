@@ -2,13 +2,12 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   Card, CardContent, Table, TableContainer, Typography, Button, Badge, CircularProgress,
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-  InputLabel, OutlinedInput, MenuItem, FormContro, Icon
+  InputLabel, OutlinedInput, MenuItem
 } from '@mui/material';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { productContext } from './ProductContext';
 import './css/ShoppingCart.css'
 import { useNavigate } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { FormControl } from '@mui/material';
 import { IconButton } from '@mui/material';
 
@@ -20,17 +19,14 @@ function Cart() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  
 
+  const removeProduct = (id) => {
+    const newProducts = products.filter((product) => product.idProduct !== id);
+    setProducts(newProducts);
+  };
 
   const fetchCartData = async () => {
     // Obtener la información del carrito desde el almacenamiento local
-
-    if (storedProducts && JSON.parse(storedProducts).length > 0) {
-      // Si se encuentran productos almacenados, usar esos datos
-      setProducts(JSON.parse(storedProducts));
-      setIsLoading(false);
-    } else {
 
       try {
 
@@ -43,36 +39,21 @@ function Cart() {
           }
         });
         const data = await response.json();
-        console.log('data', data);
-
-        if (data.message === "Cart doesn't found") {
-          const createResponse = await fetch('http://localhost:4000/shoppingCart', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-access-token': token
-            }
-          });
-          const createData = await createResponse.json();
-          setProducts(createData.products);
-        } else {
-          const productsWithAmount = data.products.map((product) => {
-            const ids = product.idProduct;
-            const productInfo = productos.find((p) => p.idProduct === ids);
-            return { ...productInfo, amount: product.amount };
-          }
-
-          );
-          setProducts(productsWithAmount);
-
+        const productsWithAmount = data.products.map((product) => {
+          const ids = product.idProduct;
+          const productInfo = productos.find((p) => p.idProduct === ids);
+          return { ...productInfo, amount: product.amount };
         }
+
+        );
+        setProducts(productsWithAmount);
         setIsLoading(false);
+
       } catch (error) {
         console.log(error);
         setIsLoading(false);
       }
 
-    }
   };
 
 
@@ -112,11 +93,10 @@ function Cart() {
                     <span style={{ color: getStockColor(product.stock) }}>
                       {product.stock <= 10 ? 'Cantidad en stock: ' + product.stock : 'Disponible'}
                     </span>
-
                     <Typography>Cantidad: {product.amount}</Typography>
                     <div className='botones'>
                       <Button size='small' variant="outlined" color="primary" >Ver producto</Button>
-                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} />}
+                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products= {products} removeProduct={removeProduct} />}
                     </div>
                   </CardContent>
                 ))}
@@ -138,21 +118,18 @@ function Cart() {
   );
 }
 
-function DeleteQuantity({ idProduct }) {
+function DeleteQuantity({ idProduct, amount,products, removeProduct }) {
   const [open, setOpen] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [productToElim, setProductToElim] = useState({amount: 1 });
-
-  if (storedProducts && JSON.parse(storedProducts).length > 0) {
-    setProducts(JSON.parse(storedProducts));
-  }
+  const [productToElim, setProductToElim] = useState({ idProduct: idProduct, amount: 1 });
 
   const handleChange = (event) => {
-    setProductToElim({ ...productToElim,
-      idProduct: idProduct,
+    setProductToElim({
+      ...productToElim,
       amount: event.target.value
-       });
+    });
   };
+
+
 
   const handleClose = (event, reason) => {
 
@@ -167,7 +144,6 @@ function DeleteQuantity({ idProduct }) {
   };
 
   const handleDelete = async () => {
-    
 
     const resul = await fetch('http://localhost:4000/shoppingCart', {
       method: 'DELETE',
@@ -181,8 +157,7 @@ function DeleteQuantity({ idProduct }) {
       })
     });
     const data = await resul.json();
-    console.log('data', data);
-    if (data=== 'the product has been updated') {
+    if (data === 'the product has been updated') {
       const newProducts = products.map((product) => {
         if (product.idProduct === productToElim.idProduct) {
           return { ...product, amount: product.amount - productToElim.amount };
@@ -191,17 +166,19 @@ function DeleteQuantity({ idProduct }) {
         }
 
       });
-      setProducts(newProducts);
       localStorage.setItem('productsCart', JSON.stringify(newProducts));
 
     }
+
+    if(data === 'the product has been deleted'){
+      removeProduct(productToElim.idProduct);
+    }
+
     setOpen(false);
     handleClose();
   };
 
   return (
-
-
     <div>
       <Button variant="outlined" color="secondary" onClick={handleOpen}>
         Eliminar
@@ -222,19 +199,12 @@ function DeleteQuantity({ idProduct }) {
               input={<OutlinedInput label="Cantidad" />}
 
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={7}>7</MenuItem>
-              <MenuItem value={8}>8</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
+              {Array.from({ length: amount }, (_, i) => i + 1).map((amount) => (
+                <MenuItem key={amount} value={amount}>
+                  {amount}
+                </MenuItem>
+              ))}
+
 
             </Select>
           </FormControl>

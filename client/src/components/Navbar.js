@@ -123,42 +123,18 @@ function Navbar() {
 
 
 function Search() {
+  const [search, setSearch] = React.useState('')
+  const {products} = useContext(productContext)
+  const navigate = useNavigate()
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
+  }
 
-  const [name, setName] = React.useState(
-    { name: '' }
-  );
-
-  const { productos, setProductos } = useContext(productContext);
   const handleSubmit = async (event) => {
-    //event.preventDefault();
-
-    try {
-
-      const url = `http://localhost:4000/product/name/${encodeURIComponent(name.name)}`;
-
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-
-      if (res.status === 400) {
-        console.log("error")
-      }
-
-      if (res.status === 404) {
-        alert("Producto no encontrado")
-        return
-      }
-
-      const data = await res.json()
-      setProductos(data)
-      console.log(data)
-    } catch (error) {
-      console.log(error)
-      alert("ups, algo salio mal")
+    
+    if(search.trim() !== ''){
+      navigate(`/search/${search}`)
     }
 
   };
@@ -166,19 +142,13 @@ function Search() {
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      if (name.name === '') {
+      if (search === '') {
         return alert('Ingrese un producto')
       }
       handleSubmit();
     }
   };
 
-  const handleChange = (event) => {
-    setName({
-      ...name,
-      [event.target.name]: event.target.value
-    });
-  };
 
   return (
 
@@ -188,7 +158,7 @@ function Search() {
         placeholder="Busca nuestros productos"
         inputProps={{ 'aria-label': 'Busca nuestros productos' }}
         name="name"
-        onChange={handleChange}
+        onChange={handleSearch}
         onKeyDown={handleKeyPress}
         variant="standard"
         InputProps={{
