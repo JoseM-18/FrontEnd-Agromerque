@@ -10,11 +10,14 @@ import './css/ShoppingCart.css'
 import { useNavigate } from 'react-router-dom';
 import { FormControl } from '@mui/material';
 import { IconButton } from '@mui/material';
+import usePageTitle from './PageTitle';
 
 const token = localStorage.getItem('token');
+
 const storedProducts = localStorage.getItem('productsCart');
 
 function Cart() {
+  usePageTitle('Carrito de compras');
   const { productos } = useContext(productContext);
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();

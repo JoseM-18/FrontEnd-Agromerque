@@ -4,27 +4,20 @@ import { productContext } from "./ProductContext";
 import { CircularProgress } from "@mui/material";
 import { Modal } from "@mui/material";
 import { TextField } from "@mui/material";
-
-
+import { FormControl } from "@mui/material";
+import { InputLabel } from "@mui/material";
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import "./css/checkout.css"
-
+import usePageTitle from "./PageTitle";
 
 const token = localStorage.getItem('token');
 function Checkout() {
+  usePageTitle('Checkout');
   const { productos } = useContext(productContext);
   const [productCart, setProductCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-
-  const handlePaymentModalOpen = () => {
-    setIsPaymentModalOpen(true);
-  };
-
-  const handlePaymentModalClose = () => {
-    setIsPaymentModalOpen(false);
-  };
 
   const handleSubmit = async (event) => {
 
@@ -37,8 +30,6 @@ function Checkout() {
 
     });
     const productsInf = await cartInfo.json();
-
-
 
     const productsWithAmount = productsInf.map((product) => {
       const productInfo = productos.find((p) => p.idProduct === product.idProduct);
@@ -88,18 +79,7 @@ function Checkout() {
               ))}
               <div className="total">
                 <Typography variant="h6">Total: ${total}</Typography>
-                <div className="payment">
-                  <Button variant="contained" color="success" onClick={handlePaymentModalOpen}>
-                    Pagar
-                  </Button>
-                </div>
-
-                <PaymentModal 
-                  isOpen={isPaymentModalOpen} 
-                  onClose={handlePaymentModalClose}
-                  selectedPayment={selectedPayment}
-                />
-                
+                <Payment />
               </div>
 
             </TableContainer>
@@ -114,7 +94,7 @@ function Checkout() {
   );
 }
 
-const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
+const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
 
   const [payment, setPayment] = useState({
     cardNumber: 0,
@@ -125,6 +105,7 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
     postalCode: 0,
     phone: "",
     email: "",
+    target: "",
 
   });
 
@@ -136,14 +117,24 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
   };
 
   const handleSubmit = async (event) => {
-    console.log(payment);
-    if(payment.cardNumber === "" || payment.dueDate === "" || payment.securityCode === "" || payment.owner === "" || payment.address === "" || payment.postalCode === "" || payment.phone === "" || payment.email === ""){
+    if (payment.cardNumber === "" || payment.dueDate === "" || payment.securityCode === "" || payment.owner === "" || payment.address === "" || payment.postalCode === "" || payment.phone === "" || payment.email === "") {
       alert("Debe llenar todos los campos");
       return;
     }
-
-    if(!payment.cardNumber.match(/^\d{16}$/)){
+    if (!payment.cardNumber.match(/^\d{16}$/)) {
+      //verificar si los 4 primeros digitos son de visa o mastercard
       alert("El numero de tarjeta debe tener 16 digitos");
+      return;
+    }
+
+    if(payment.cardNumber.match(/^4\d{15}$/)){
+      setPayment({ ...payment, target: 'Visa' });
+
+    }else if(payment.cardNumber.match(/^5\d{15}$/)){
+      console.log("entro");
+      setPayment({ ...payment, target: 'MasterCard' });
+    }else{
+      alert("El numero de tarjeta no es valido");
       return;
     }
 
@@ -156,23 +147,23 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
       body: JSON.stringify(payment)
 
     });
-    
-    const data = await response.json();
-    console.log(data);
 
-    if(data.message ==="PaymentMethod created"){
+    const data = await response.json();
+
+    if (data.message === "PaymentMethod created") {
       alert("Pago realizado con exito");
+      onPaymentAdded();
       onClose();
     }
 
-    if(data.message === "PaymentMethod already exist"){
+    if (data.message === "PaymentMethod already exist") {
       alert("El metodo de pago ya existe");
       onClose();
     }
 
   };
 
-  
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <div className="payment-modal">
@@ -221,7 +212,7 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
             id="outlined-basic"
             label="Direccion"
             variant="outlined"
-            name= "address"
+            name="address"
             onChange={handleChanges}
           />
 
@@ -252,7 +243,7 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
         </div>
 
         <Button variant="contained" color="success" onClick={handleSubmit}>
-          Pagar
+          agregar
         </Button>
       </div>
     </Modal>
@@ -263,20 +254,40 @@ const PaymentModal = ({ isOpen, onClose, selectedPayment }) => {
 
 function Payment() {
   const [payment, setPayment] = useState([]);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+
+  
+  const handlePaymentModalOpen = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const handlePaymentModalClose = () => {
+    setIsPaymentModalOpen(false);
+  };
 
   const handleSubmit = async (event) => {
 
-
-
-    const response = await fetch('http://localhost:4000/payment', {
+    const response = await fetch('http://localhost:4000/paymentMethod', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'x-access-token': token
       }
     });
+
     const data = await response.json();
-    setPayment(data);
+    if(data.message === "Token is not valid"){
+      alert("Debe iniciar sesion");
+      return;
+    }
+
+    if(data.message !== "There are not payment methods"){
+      setPayment(data);
+    }
+
+
   }
 
   useEffect(() => {
@@ -284,32 +295,52 @@ function Payment() {
   }, []); // El segundo parámetro [] asegura que el efecto se ejecute solo una vez al montar el componente
 
   return (
-    <div className="body">
+    <div className="body-pay">
       <Typography variant="h6">Metodos de pago</Typography>
       {payment.length > 0 ? (
-        <TableContainer component={Card}>
-          <Table className="infoProduct">
-            {payment.map((pay) => (
-              <CardContent key={pay.idPayment} className="infoProducts">
-                <Typography variant="h6" className="nameProd"> {pay.name}</Typography>
-                <Typography variant="h6">Descripcion:{pay.description}</Typography>
-              </CardContent>
+        <FormControl className="formControl">
+          <InputLabel id="demo-simple-select-outlined-label">Metodos de pago</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            onChange={(event) => setSelectedPayment(event.target.value)}
+            label="Metodos de pago"
+          >
+            {payment.map((payment) => (
+              <MenuItem value={payment}>{payment.target} Terminada en {payment.cardNumber.substring(payment.cardNumber.length - 4)}
+              </MenuItem>
             ))}
-          </Table>
-        </TableContainer>
+          </Select>
+
+          <Button variant="contained" className="addPayment" color="success" onClick={handlePaymentModalOpen}>
+            añadir un metodo de pago
+          </Button>
+
+        </FormControl>
+
       ) : (
         <div>
 
           <Typography variant="h6">No hay metodos de pago</Typography>
-          <Button variant="contained" color="success" >añadir un metodo de pago</Button>
+          <Button variant="contained" color="success" onClick={handlePaymentModalOpen} >añadir un metodo de pago</Button>
 
         </div>
 
       )}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={handlePaymentModalClose}
+        onPaymentAdded={handleSubmit}
+      />
+      <Button variant="contained" color="success" >Pagar</Button>
+
     </div>
 
   );
 }
+
+
+
 
 
 

@@ -58,12 +58,14 @@ function Target({ products }) {
     }
   }
   
+  
   return (
     <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10%' }}  >
-      <Card className='card'sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 800 }}>
+
 
         {products.map((product) => (
-
+          
+          <Card className='card'sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 800 }}>
           <div className='content' key={product.idProduct}>
 
             <CardActionArea>
@@ -120,8 +122,8 @@ function Target({ products }) {
 
           </div>
 
-        ))}
       </Card>
+        ))}
     </div>
 
 

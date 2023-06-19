@@ -3,9 +3,10 @@ import { Button, TextField } from '@mui/material'
 import "./css/LoginForm.css"
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router-dom'
-
+import usePageTitle from './PageTitle'
 function LoginForm() {
   const navigate = useNavigate()
+  usePageTitle('Iniciar Sesión - AgroMerque');
   //se conecta con el backend para verificar si el usuario existe
 
   const [passwordIncorrect, setPasswordIncorrect] = useState(false)

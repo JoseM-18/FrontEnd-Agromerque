@@ -3,9 +3,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import { Snackbar } from '@mui/material';
-
+import usePageTitle from './PageTitle';
 function RegisterForm() {
-
+  usePageTitle('Registrarse - AgroMerque');
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {

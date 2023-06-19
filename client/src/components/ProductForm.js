@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './css/ProductFormat.css';
 import TextField from '@mui/material/TextField';
-
+import usePageTitle from './PageTitle';
 import { Button } from '@mui/material';
 import { Snackbar } from '@mui/material';
 
@@ -10,6 +10,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 
 function ProductForm() {
+  usePageTitle('Registro de productos');
   const [product, setProduct] = useState({
     idProduct: 0,
     name: '',

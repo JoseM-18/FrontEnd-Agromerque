@@ -3,9 +3,10 @@ import jwt_decode from "jwt-decode";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import "./css/Userprofile.css";
-
+import usePageTitle from "./PageTitle";
 //pagina para el perfil del usuario
 function Userprofile() {
+  usePageTitle('Perfil de usuario');
   if(localStorage.getItem("token") === null){
     window.location.href = '/login'
   }

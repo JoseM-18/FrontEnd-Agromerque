@@ -77,3 +77,22 @@
 
 }
 
+.body-pay{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    padding: 0 1rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 7%;
+    
+    
+}
+
+.formControl{
+    margin-bottom: 20px;
+}
