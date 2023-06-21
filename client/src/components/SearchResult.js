@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { productContext } from './ProductContext';
 import { useParams } from 'react-router-dom';
-import { Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import Target from './Target';
 import usePageTitle from './PageTitle';
 function SearchResult() {
@@ -12,6 +12,8 @@ function SearchResult() {
   const [search, setSearch] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const { searchTerm } = useParams();
+
+  
 
   usePageTitle('Busqueda ' + searchTerm);
   useEffect(() => {

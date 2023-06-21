@@ -35,7 +35,7 @@ function App() {
 
   }, [])
 
-
+  console.log(productos);
   return (
     <ProductProvider >
       <productContext.Provider value={{ productos, setProductos }}>

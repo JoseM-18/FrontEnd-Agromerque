@@ -7,8 +7,8 @@ import { Button, CardActionArea, CardActions, Modal } from '@mui/material';
 import { useNavigate } from 'react-router'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import IconButton from '@mui/material/IconButton';
-import { productContext } from './ProductContext';
 import './css/Target.css'
+import SeeInfo from "./infoProduct";
 
 
 function Target({ products }) {
@@ -43,7 +43,6 @@ function Target({ products }) {
     if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
       navigate('/cart')
     }
-
     if (data === 'Product already exists') {
       navigate('/cart')
     }
@@ -58,18 +57,22 @@ function Target({ products }) {
     }
   }
 
+  const [selectedProductId, setSelectedProductId] = useState(null)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
-  const [selectedId, setSelectedId] = useState(null);
 
-  const handleOpenInfoOpen = (id) => {
-    setSelectedId(id)
+
+
+  const handleClickOpen = (idProduct) => {
+    setSelectedProductId(idProduct)
     setIsInfoOpen(true)
-  }
+  };
 
-  const handleCloseInfoOpen = () => {
+  const handleClose = () => {
+    setSelectedProductId(null)
     setIsInfoOpen(false)
-  }
+  };
 
+  
   return (
     <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}  >
 
@@ -77,7 +80,7 @@ function Target({ products }) {
       {products.map((product) => (
 
         <Card className='card' sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 400 }}>
-          <div className='content' key={product.idProduct}>
+          <div className='content' key={product.idProduct}  >
 
             <CardActionArea>
 
@@ -127,11 +130,11 @@ function Target({ products }) {
                   Añadir al carrito
                 </IconButton>
 
-                <Button size="small" color="primary">
+                <Button size="small" color="primary" onClick = {() => handleClickOpen(product.idProduct)}>
                   Info
                 </Button>
+                <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
               </div>
-              {/*<SeeInfo idProduct = {selectedId} isOpen={isInfoOpen} onClose={handleCloseInfoOpen}/>*/}
             </CardActions>
           </div>
         </Card>
@@ -142,30 +145,6 @@ function Target({ products }) {
   )
 }
 
-function SeeInfo({ idProduct, isOpen, onClose }) {
-  const { productos } = useContext(productContext);
-  const [product, setProduct] = useState([]);
 
-  useEffect(() => {
-    const foundProduct = productos.find((producto) => producto.idProduct === idProduct);
-    setProduct(foundProduct);
-  }, [idProduct, productos]);
-
-  return (
-    <Modal open={isOpen} onClose={onClose}>
-      <div className="infoProd">
-        <h1>nombre del producto {product.name}</h1>
-      </div>
-    </Modal>
-
-  );
-};
-
-
-
-
-
-
-
-
-export default Target
+//exportamos el componente y la funcion de info para poder usarla en otros componentes
+export default Target ;

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { FormControl } from '@mui/material';
 import { IconButton } from '@mui/material';
 import usePageTitle from './PageTitle';
+import SeeInfo from './infoProduct';
 
 const token = localStorage.getItem('token');
 
@@ -59,10 +60,26 @@ function Cart() {
 
   };
 
+  const [selectedProductId, setSelectedProductId] = useState(null)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
+
+
+
+  const handleClickOpen = (idProduct) => {
+    setSelectedProductId(idProduct);
+    setIsInfoOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedProductId(null)
+    setIsInfoOpen(false);
+  };
+
 
   useEffect(() => {
     fetchCartData();
   }, []);
+
 
   const getStockColor = (stock) => {
     if (stock > 10) {
@@ -98,7 +115,8 @@ function Cart() {
                     </span>
                     <Typography>Cantidad: {product.amount}</Typography>
                     <div className='botones'>
-                      <Button size='small' variant="outlined" color="primary" >Ver producto</Button>
+                      <Button size='small' variant="outlined" color="primary" onClick={() => handleClickOpen(product.idProduct)} >Ver producto</Button>
+                      <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
                       {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products= {products} removeProduct={removeProduct} />}
                     </div>
                   </CardContent>
