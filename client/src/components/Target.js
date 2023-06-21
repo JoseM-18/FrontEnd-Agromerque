@@ -1,23 +1,23 @@
-import React, { useState, } from 'react'
+import React, { useContext, useEffect, useState } from "react";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActionArea, CardActions, Modal } from '@mui/material';
 import { useNavigate } from 'react-router'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import IconButton from '@mui/material/IconButton';
-
+import { productContext } from './ProductContext';
+import './css/Target.css'
 
 
 function Target({ products }) {
-  
+
   const [amount, setamount] = useState(1)
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
   const setCount = (idProduct, value) => {
-    console.log(idProduct, value)
     setamount((prevamount) => ({
       ...prevamount,
       [idProduct]: value
@@ -40,7 +40,7 @@ function Target({ products }) {
 
     const data = await response.json()
     console.log(data)
-    if (data=== 'the product was added to the cart ' || data=== 'the product was added to the cart and the stock was updated') {
+    if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
       navigate('/cart')
     }
 
@@ -52,20 +52,31 @@ function Target({ products }) {
       navigate('/login')
     }
 
-    if(data === 'you are admin, you can not buy products'){
+    if (data === 'you are admin, you can not buy products') {
       alert('you are admin, you can not buy products')
-      return ;
+      return;
     }
   }
-  
-  
+
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
+  const [selectedId, setSelectedId] = useState(null);
+
+  const handleOpenInfoOpen = (id) => {
+    setSelectedId(id)
+    setIsInfoOpen(true)
+  }
+
+  const handleCloseInfoOpen = () => {
+    setIsInfoOpen(false)
+  }
+
   return (
-    <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10%' }}  >
+    <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}  >
 
 
-        {products.map((product) => (
-          
-          <Card className='card'sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 800 }}>
+      {products.map((product) => (
+
+        <Card className='card' sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 400 }}>
           <div className='content' key={product.idProduct}>
 
             <CardActionArea>
@@ -84,51 +95,74 @@ function Target({ products }) {
                 </Typography>
 
 
-                  <Typography variant="body2" color="text.secondary">
-                    Unidades: {product.stock}
-                  </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Unidades: {product.stock}
+                </Typography>
 
-                  <Typography variant="body2" color="text.secondary">
-                    {product.salePrice} $
-                  </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {product.salePrice} $
+                </Typography>
 
               </CardContent>
 
             </CardActionArea>
 
-            <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}
+            <CardActions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}
               className='cardActions'
             >
-                <input size={'small'}
-                  type="number"
-                  value={amount[product.idProduct] || 1}
-                  onChange={(e) => setCount(product.idProduct, e.target.value)}
-                />
-              <IconButton sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start', 
-              justifyContent: 'flex-start', marginTop: '1rem', fontSize: '0.1rem' }} color="primary" onClick={() => {
-                const productAmount = amount[product.idProduct] || 1;
-                addProduct(product.idProduct, productAmount)
-              }} aria-label='add shopping cart' size='small' >
-                <AddShoppingCartIcon />
-                Añadir al carrito
-              </IconButton>
+              <input size={'small'}
+                type="number"
+                value={amount[product.idProduct] || 1}
+                onChange={(e) => setCount(product.idProduct, e.target.value)}
+              />
+              <div className="botones">
+                <IconButton sx={{
+                  display: 'flex', flexDirection: 'row', gap: '1rem', alignItems: 'flex-start',
+                  justifyContent: 'flex-start', fontSize: '0.1rem'
+                }} color="primary" onClick={() => {
+                  const productAmount = amount[product.idProduct] || 1;
+                  addProduct(product.idProduct, productAmount)
+                }} aria-label='add shopping cart' size='small' >
+                  <AddShoppingCartIcon />
+                  Añadir al carrito
+                </IconButton>
 
-              <Button size="small" color="primary"
-                onClick={() => navigate("/product")}
-              >
-                Info
-              </Button>
+                <Button size="small" color="primary">
+                  Info
+                </Button>
+              </div>
+              {/*<SeeInfo idProduct = {selectedId} isOpen={isInfoOpen} onClose={handleCloseInfoOpen}/>*/}
             </CardActions>
-
           </div>
-
-      </Card>
-        ))}
+        </Card>
+      ))}
     </div>
 
 
   )
 }
+
+function SeeInfo({ idProduct, isOpen, onClose }) {
+  const { productos } = useContext(productContext);
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    const foundProduct = productos.find((producto) => producto.idProduct === idProduct);
+    setProduct(foundProduct);
+  }, [idProduct, productos]);
+
+  return (
+    <Modal open={isOpen} onClose={onClose}>
+      <div className="infoProd">
+        <h1>nombre del producto {product.name}</h1>
+      </div>
+    </Modal>
+
+  );
+};
+
+
+
 
 
 

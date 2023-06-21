@@ -1,6 +1,7 @@
 .filters {  
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
     gap: 1rem;
     padding: 1rem;
     background-color: #fff;
@@ -10,30 +11,33 @@
     position: sticky;
     top: 3.6rem;
     z-index: 1;
-    max-width: 20rem;
+    max-width: 200rem;
     min-width: 20rem;
     height: fit-content;
     align-self: flex-start;
     justify-self: flex-start;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
     overflow: hidden;
     transition: all 0.1s ease-in-out;
     margin-top: 60px;
+    font-family: "Roboto", sans-serif;
 }
 
 .price{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
     align-items: flex-start;
     justify-content: flex-start;
+    margin-top: 10px;
 }
 
 .category{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
     align-items: flex-start;
     justify-content: flex-start;
+    margin-top: 10px;
 }

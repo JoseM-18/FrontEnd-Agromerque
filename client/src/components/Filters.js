@@ -1,11 +1,12 @@
+import Typography from '@mui/material/Typography';
 import "./css/Filters.css"
 
 function Filters() {
-    return(
+    return (
         <section className="filters">
 
             <div className="price">
-                <label htmlFor="price">Precio</label>  
+                <Typography variant='button' htmlFor="price">Precio</Typography>
                 <input
                     type="range"
                     id="price"
@@ -15,14 +16,14 @@ function Filters() {
             </div>
 
             <div className="category">
-                <label htmlFor="category">Categoria</label>  
+                <Typography variant='button' htmlFor="category">Categoria</Typography>
                 <select id="category">
                     <option value="All">Todas</option>
                     <option value="Hortalizas">Hortalizas</option>
                     <option value="Frutas">Frutas</option>
                 </select>
             </div>
-            
+
         </section>
     );
 }

@@ -48,7 +48,7 @@ function App() {
                 <Route path="/register" element={<RegisterForm />} />
                 <Route path="/cart" element={<ShoppingCart />} />
                 <Route path="/admin" element={<ProductForm />}></Route>
-                <Route path="/product" element={<ProductDetail />}></Route>
+                <Route path="/product/:idProduct" element={<ProductDetail />}></Route>
                 <Route path="/profile" element={<Userprofile />}></Route>
                 <Route path="/checkout" element={<Checkout />}></Route>
                 <Route path="/Search/:searchTerm" element={<Search />}></Route>
