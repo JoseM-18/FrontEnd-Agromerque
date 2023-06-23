@@ -39,7 +39,6 @@ function Target({ products }) {
     })
 
     const data = await response.json()
-    console.log(data)
     if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
       navigate('/cart')
     }
@@ -79,8 +78,8 @@ function Target({ products }) {
 
       {products.map((product) => (
 
-        <Card className='card' sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 400 }}>
-          <div className='content' key={product.idProduct}  >
+        <Card key={product.idProduct} className='card' sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 400 }}>
+          <div className='content'  >
 
             <CardActionArea>
 

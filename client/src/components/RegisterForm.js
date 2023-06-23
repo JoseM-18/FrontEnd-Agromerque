@@ -31,8 +31,6 @@ function RegisterForm() {
       return
     }
 
-    console.log(signin)
-
     try{
 
       // Lógica para manejar el envío del formulario de registro
@@ -44,8 +42,6 @@ function RegisterForm() {
         }
       })
       const date = await res.json()
-      console.log(date)
-    console.log(date.message)
     if(date.message === 'User created'){
       alert(date.message)
       window.location.href = '/login'

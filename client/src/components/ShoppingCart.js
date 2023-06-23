@@ -114,11 +114,11 @@ function Cart() {
                       {product.stock <= 10 ? 'Cantidad en stock: ' + product.stock : 'Disponible'}
                     </span>
                     <Typography>Cantidad: {product.amount}</Typography>
-                    <div className='botones'>
+                    <h1 className='botones'>
                       <Button size='small' variant="outlined" color="primary" onClick={() => handleClickOpen(product.idProduct)} >Ver producto</Button>
                       <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
                       {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products= {products} removeProduct={removeProduct} />}
-                    </div>
+                    </h1>
                   </CardContent>
                 ))}
               </Table>

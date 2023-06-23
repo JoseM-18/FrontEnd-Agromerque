@@ -60,7 +60,6 @@ function Userprofile() {
         body: JSON.stringify({ name, lastname, email, phone, address, password }),
       });
       const data = await response.json();
-      console.log(data);
       alert("Se ha actualizado el perfil");
     } catch (error) {
       console.log(error);

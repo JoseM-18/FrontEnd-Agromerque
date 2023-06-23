@@ -31,9 +31,6 @@ function LoginForm() {
       })
       const date = await res.json()
       
-      console.log(date.message)
-      
-      
       setUsernameIncorrect(false)
       setPasswordIncorrect(false)
       

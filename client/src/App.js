@@ -25,6 +25,10 @@ function App() {
       try {
         const response = await fetch('http://localhost:4000/product');
         const data = await response.json();
+        if(data.error) {
+          console.log(data.error);
+          return;
+        }
         setProductos(data);
       } catch (error) {
         console.log(error);
@@ -35,7 +39,6 @@ function App() {
 
   }, [])
 
-  console.log(productos);
   return (
     <ProductProvider >
       <productContext.Provider value={{ productos, setProductos }}>

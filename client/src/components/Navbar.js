@@ -30,7 +30,6 @@ function Navbar() {
       const decoded = jwt_decode(token)
       const username = decoded.username
       setUserName(username)
-      console.log(decoded.role)
       if (decoded.role === 'Admin') {
 
         setIsAdmin(true)

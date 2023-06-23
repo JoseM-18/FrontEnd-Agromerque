@@ -26,7 +26,6 @@ function ProductForm() {
     harvestDate: '',
   });
 
-  console.log(product)
 
   const [open, setOpen] = useState(false);
 
@@ -54,7 +53,6 @@ function ProductForm() {
     event.preventDefault();
 
     const empyField = Object.values(product).some((value) => value === "")
-    console.log(product)
 
     if (empyField) {
       alert("Por favor, llene todos los campos")
@@ -74,8 +72,7 @@ function ProductForm() {
       })
 
       const date = await res.json()
-      console.log(date)
-      console.log(date.message)
+
       if (date.message === 'Product created successfully') {
         alert(date.message)
         window.location.href = '/'

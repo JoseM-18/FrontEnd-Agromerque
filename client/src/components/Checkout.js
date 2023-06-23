@@ -10,15 +10,21 @@ import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import "./css/checkout.css"
 import usePageTitle from "./PageTitle";
+import { useNavigate } from "react-router-dom";
+
 
 const token = localStorage.getItem('token');
 function Checkout() {
   usePageTitle('Checkout');
+const navigate = useNavigate();
+
   const { productos } = useContext(productContext);
   const [productCart, setProductCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [productsToSend, setProductsToSend] = useState([]);
 
+ 
   const handleSubmit = async (event) => {
 
     const cartInfo = await fetch('http://localhost:4000/shoppingCart/products', {
@@ -31,18 +37,31 @@ function Checkout() {
     });
     const productsInf = await cartInfo.json();
 
+
+    if(productsInf.message === "Cart doesn't found"){
+      alert("El carrito esta vacio");
+      navigate('/');
+      return;
+    }
+
     const productsWithAmount = productsInf.map((product) => {
       const productInfo = productos.find((p) => p.idProduct === product.idProduct);
-      console.log(productInfo);
       return { ...productInfo, amount: product.amount };
     }
     );
+
+    const productsToSend = productsWithAmount.map((product) => {
+      return { idProduct: product.idProduct, amount: product.amount };
+    }
+
+    );
+
+    setProductsToSend(productsToSend);
     setProductCart(productsWithAmount);
     setIsLoading(false);
 
     setTotal(productsWithAmount.reduce((acc, product) => acc + product.salePrice * product.amount, 0));
   }
-
 
   useEffect(() => {
     handleSubmit();
@@ -77,10 +96,8 @@ function Checkout() {
                 </CardContent>
 
               ))}
-              <div className="total">
                 <Typography variant="h6">Total: ${total}</Typography>
-                <Payment />
-              </div>
+                <Payment productsToSend={productsToSend} total={total} />
 
             </TableContainer>
             //zona de metodos de pago
@@ -131,7 +148,6 @@ const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
       setPayment({ ...payment, target: 'Visa' });
 
     }else if(payment.cardNumber.match(/^5\d{15}$/)){
-      console.log("entro");
       setPayment({ ...payment, target: 'MasterCard' });
     }else{
       alert("El numero de tarjeta no es valido");
@@ -252,12 +268,41 @@ const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
 
 }
 
-function Payment() {
+function Payment({ total,productsToSend}) {
   const [payment, setPayment] = useState([]);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
-  const [selectedPaymentId, setSelectedPaymentId] = useState(null);
+  
+  const handleSubmitOrder = async (event) => {
+    if (selectedPayment === null) {
+      alert("Debe seleccionar un metodo de pago");
+      return;
+    }
+    const response = await fetch('http://localhost:4000/Order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token
+      },
+      body: JSON.stringify({
+        selectedPayment,
+        productsToSend,
+        total
+      })
 
+    });
+    const data = await response.json();
+
+    if (data.message === "Order created successfully") {
+      confirm("Orden " + data.idOrder + " creada con exito");
+      window.location.reload();
+    }
+
+  };
+  const handleChangePayment = (event) => {
+    const selectedPayment = event.target.value;
+    setSelectedPayment(selectedPayment);
+  }; 
   
   const handlePaymentModalOpen = () => {
     setIsPaymentModalOpen(true);
@@ -303,12 +348,15 @@ function Payment() {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            onChange={(event) => setSelectedPayment(event.target.value)}
             label="Metodos de pago"
+            onChange={handleChangePayment}
           >
             {payment.map((payment) => (
               <MenuItem value={payment}>{payment.target} Terminada en {payment.cardNumber.substring(payment.cardNumber.length - 4)}
               </MenuItem>
+              
+
+              
             ))}
           </Select>
 
@@ -332,12 +380,15 @@ function Payment() {
         onClose={handlePaymentModalClose}
         onPaymentAdded={handleSubmit}
       />
-      <Button variant="contained" color="success" >Pagar</Button>
+      <Button variant="contained" color="success" onClick={handleSubmitOrder} >Pagar</Button>
 
     </div>
-
   );
 }
+
+const confirm = ({order}) => {
+  alert(`Orden confirmada: \n\n${order}`);
+};
 
 
 

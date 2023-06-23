@@ -12,7 +12,7 @@ function Filters() {
 
     const [filters, setFilters] = useState({
         minPrice: 0,
-        category: 'all'
+        category: 'Frutas'
     });
 
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -22,7 +22,7 @@ function Filters() {
             product => product.salePrice >= filters.minPrice &&
                 (
                     filters.category === 'all' ||
-                    product.category === product.category.includes(searchTerm)
+                    product.categoryname === product.categoryname.includes(searchTerm)
                 )
         );
 
