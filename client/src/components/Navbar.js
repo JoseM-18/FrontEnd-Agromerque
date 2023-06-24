@@ -12,7 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { productContext } from './ProductContext';
 import jwt_decode from 'jwt-decode';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import jwtDecode from 'jwt-decode';
 
 function Navbar() {
 
@@ -23,12 +23,23 @@ function Navbar() {
   const [isLoading, setIsLoading] = React.useState(true)
   // define el estado de isLogged si hay un token en el localstorage
   React.useEffect(() => {
+    
     if (localStorage.getItem('token')) {  
-      setIsLogged(true)
-
+      
+      
       const token = localStorage.getItem('token')
       const decoded = jwt_decode(token)
       const username = decoded.username
+      //verificamos que el token no este expirado
+      if (decoded.exp < Date.now() / 1000) {
+        setIsLogged(false)
+        localStorage.removeItem('token')
+        localStorage.removeItem('productsCart')
+        alert('Su sesión ha expirado, por favor inicie sesión nuevamente')
+        navigate('/login')
+      }
+
+      setIsLogged(true)
       setUserName(username)
       if (decoded.role === 'Admin') {
 

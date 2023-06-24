@@ -179,6 +179,7 @@ function DeleteQuantity({ idProduct, amount,products, removeProduct }) {
     });
     const data = await resul.json();
     if (data === 'the product has been updated') {
+      console.log('entro');
       const newProducts = products.map((product) => {
         if (product.idProduct === productToElim.idProduct) {
           return { ...product, amount: product.amount - productToElim.amount };
@@ -188,13 +189,13 @@ function DeleteQuantity({ idProduct, amount,products, removeProduct }) {
 
       });
       localStorage.setItem('productsCart', JSON.stringify(newProducts));
-
+     
     }
 
     if(data === 'the product has been deleted'){
       removeProduct(productToElim.idProduct);
     }
-
+    console.log(data);
     setOpen(false);
     handleClose();
   };

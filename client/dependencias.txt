@@ -7,3 +7,4 @@ npm install @mui/x-date-pickers
 npm install dayjs
 npm install @mui/core
 npm install jwt-decode
+npm install mdb-ui-kit

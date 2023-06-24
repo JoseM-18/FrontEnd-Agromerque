@@ -39,18 +39,18 @@ function Target({ products }) {
     })
 
     const data = await response.json()
-    if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
+    if (data.message === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
       navigate('/cart')
     }
-    if (data === 'Product already exists') {
+    if (data.message === 'Product already exists') {
       navigate('/cart')
     }
 
-    if (data === "Unauthorized!") {
+    if (data.message === "Unauthorized!") {
       navigate('/login')
     }
 
-    if (data === 'you are admin, you can not buy products') {
+    if (data.message === 'you are admin, you can not buy products') {
       alert('you are admin, you can not buy products')
       return;
     }

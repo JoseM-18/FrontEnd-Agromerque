@@ -91,11 +91,9 @@ function Userprofile() {
 
 
   return (
-    <section style={{ backgroundColor: '#eee' }}>
+    <section style={{ backgroundColor: '#eee', marginTop: '30px' }  }>
       <MDBContainer className="py-5">
         <MDBValidation className='row g-3'>
-
-
           <MDBRow>
             <MDBCol>
               <MDBBreadcrumb className="bg-light rounded-3 p-3 mb-4">
@@ -234,11 +232,16 @@ function Userprofile() {
                   </MDBRow>
                   <hr />
                   <MDBRow>
-                    <div className='col-12'>
-                      <MDBBtn onClick={handleSubmit} type='submit'>Actualizar</MDBBtn>
-                      <MDBBtn type='reset'>Cancelar</MDBBtn>
-                    </div>
-
+                    <MDBCol sm="3">
+                      <MDBBtn color="primary" type="submit" onClick={handleSubmit}>
+                        Guardar
+                      </MDBBtn>
+                    </MDBCol>
+                    <MDBCol sm="3">
+                      <MDBBtn color="danger" type="submit">
+                        Cancelar
+                      </MDBBtn>
+                    </MDBCol>
                   </MDBRow>
                   <hr />
                 </MDBCardBody>

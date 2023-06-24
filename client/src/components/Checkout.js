@@ -294,8 +294,7 @@ function Payment({ total,productsToSend}) {
     const data = await response.json();
 
     if (data.message === "Order created successfully") {
-      confirm("Orden " + data.idOrder + " creada con exito");
-      window.location.reload();
+      confirm(data)
     }
 
   };
@@ -386,12 +385,25 @@ function Payment({ total,productsToSend}) {
   );
 }
 
-const confirm = ({order}) => {
-  alert(`Orden confirmada: \n\n${order}`);
+const confirm = (order) => {
+  return (
+    <Modal open={true} >
+      <div className="payment-modal">
+        <Typography variant="h6">Su orden ha sido creada con exito</Typography>
+        <Typography variant="h6">Numero de orden: {order.idOrder}</Typography>
+        <Typography variant="h6">Total: {order.orderTotal}</Typography>
+        <Typography variant="h6">Productos: {order.products.map((product) => (
+          <div>
+            <Typography variant="h6">Nombre: {product.name}</Typography>
+            <Typography variant="h6">Cantidad: {product.amount}</Typography>
+            <Typography variant="h6">Precio: {product.salePrice}</Typography>
+          </div>
+        ))}</Typography>
+      </div>
+    </Modal>
+  );
+
 };
-
-
-
 
 
 
