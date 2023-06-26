@@ -24,6 +24,7 @@ function Cart() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
+
   const removeProduct = (id) => {
     const newProducts = products.filter((product) => product.idProduct !== id);
     setProducts(newProducts);
@@ -32,8 +33,8 @@ function Cart() {
   const fetchCartData = async () => {
     // Obtener la información del carrito desde el almacenamiento local
 
-      try {
-
+    try {
+      
         // Si no se encuentran productos almacenados, obtener los datos desde la base de datos
         const response = await fetch('http://localhost:4000/shoppingCart', {
           method: 'GET',
@@ -52,22 +53,20 @@ function Cart() {
         );
         setProducts(productsWithAmount);
         setIsLoading(false);
-
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
 
   };
 
   const [selectedProductId, setSelectedProductId] = useState(null)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
 
-
-
   const handleClickOpen = (idProduct) => {
     setSelectedProductId(idProduct);
     setIsInfoOpen(true);
+    
   };
 
   const handleClose = () => {
@@ -117,7 +116,7 @@ function Cart() {
                     <h1 className='botones'>
                       <Button size='small' variant="outlined" color="primary" onClick={() => handleClickOpen(product.idProduct)} >Ver producto</Button>
                       <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
-                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products= {products} removeProduct={removeProduct} />}
+                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products={products} removeProduct={removeProduct} />}
                     </h1>
                   </CardContent>
                 ))}
@@ -139,7 +138,7 @@ function Cart() {
   );
 }
 
-function DeleteQuantity({ idProduct, amount,products, removeProduct }) {
+function DeleteQuantity({ idProduct, amount, products, removeProduct }) {
   const [open, setOpen] = useState(false);
   const [productToElim, setProductToElim] = useState({ idProduct: idProduct, amount: 1 });
 
@@ -189,10 +188,10 @@ function DeleteQuantity({ idProduct, amount,products, removeProduct }) {
 
       });
       localStorage.setItem('productsCart', JSON.stringify(newProducts));
-     
+
     }
 
-    if(data === 'the product has been deleted'){
+    if (data === 'the product has been deleted') {
       removeProduct(productToElim.idProduct);
     }
     console.log(data);

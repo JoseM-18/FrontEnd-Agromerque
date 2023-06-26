@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { productContext } from './ProductContext';
 import { Container, Grid, Typography } from '@mui/material';
 import Target from './Target';
@@ -8,7 +7,26 @@ import "./css/Filters.css"
 function Filters() {
 
     const { productos } = useContext(productContext);
-    const { searchTerm } = useParams();
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch('http://localhost:4000/category');
+                const data = await response.json();
+                if (data.error) {
+                    console.log(data.error);
+                    return;
+                }
+                setCategories(data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchCategories();
+    }, [])
+
+
 
     const [filters, setFilters] = useState({
         minPrice: 0,
@@ -19,15 +37,14 @@ function Filters() {
 
     useEffect(() => {
         const filtered = productos.filter(
-            product => product.salePrice >= filters.minPrice &&
-                (
-                    filters.category === 'all' ||
-                    product.categoryname === filters.category
-                )
+          (product) =>
+            product.salePrice >= filters.minPrice &&
+            (filters.category === 'all' || product.categoryname === filters.category)
         );
-
+      
         setFilteredProducts(filtered);
-    });
+      }, [productos, filters.minPrice, filters.category]);
+      
 
     const [minPrice, setMinPrice] = useState(0)
 
@@ -63,19 +80,21 @@ function Filters() {
 
             <div className="category">
                 <Typography variant='button' htmlFor="category">Categoria</Typography>
-                <select id="category" onChange= {handleChangeCategory} >
+                <select id="category" onChange={handleChangeCategory}>
                     <option value="all">Todas</option>
-                    <option value="Hortalizas">Hortalizas</option>
-                    <option value="Frutas">Frutas</option>
+                    {categories.map((category) => (
+                        <option key={category.idCategory} value={category.nameCategory}>{category.nameCategory}</option>
+                    ))}
                 </select>
+                    
             </div>
 
         </section>
 
         <Container>
             <Grid container spacing={4}>
-                <div className="body">
-                    <Target products={filteredProducts} />
+                <div className="body" >
+                    <Target products={filteredProducts} s />
                 </div>
             </Grid>
         </Container></>

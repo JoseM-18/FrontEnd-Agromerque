@@ -32,3 +32,15 @@
   width: 18em;
 }
 
+
+
+.modal-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20em;
+  height: 20em;
+  gap: 1em;
+
+}

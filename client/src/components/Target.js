@@ -25,6 +25,7 @@ function Target({ products }) {
   }
 
 
+
   const addProduct = async (idProduct, amount) => {
     const response = await fetch(`http://localhost:4000/shoppingCartProduct/`, {
       method: 'POST',
@@ -39,18 +40,19 @@ function Target({ products }) {
     })
 
     const data = await response.json()
-    if (data.message === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
+    console.log(data)
+    if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
       navigate('/cart')
     }
-    if (data.message === 'Product already exists') {
+    if (data === 'Product already exists') {
       navigate('/cart')
     }
 
-    if (data.message === "Unauthorized!") {
+    if (data === "Unauthorized!") {
       navigate('/login')
     }
 
-    if (data.message === 'you are admin, you can not buy products') {
+    if (data === 'you are admin, you can not buy products') {
       alert('you are admin, you can not buy products')
       return;
     }
@@ -58,8 +60,6 @@ function Target({ products }) {
 
   const [selectedProductId, setSelectedProductId] = useState(null)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
-
-
 
   const handleClickOpen = (idProduct) => {
     setSelectedProductId(idProduct)
@@ -71,14 +71,17 @@ function Target({ products }) {
     setIsInfoOpen(false)
   };
 
-  
-  return (
-    <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}  >
 
+  return (
+    <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}  >
 
       {products.map((product) => (
 
-        <Card key={product.idProduct} className='card' sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', maxWidth: 400 }}>
+
+        <Card key={product.idProduct} style={{ flex: `0 0 ${100 / products.length}%`, margin: '20px' }}>
+          {products.length === 0 && (
+            <Card style={{ flex: '0 0 30%', visibility: 'hidden' }} />
+          )}
           <div className='content'  >
 
             <CardActionArea>
@@ -109,7 +112,7 @@ function Target({ products }) {
 
             </CardActionArea>
 
-            <CardActions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}
+            <CardActions style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start', justifyContent: 'flex-start' }}
               className='cardActions'
             >
               <input size={'small'}
@@ -119,17 +122,18 @@ function Target({ products }) {
               />
               <div className="botones">
                 <IconButton sx={{
-                  display: 'flex', flexDirection: 'row', gap: '1rem', alignItems: 'flex-start',
-                  justifyContent: 'flex-start', fontSize: '0.1rem'
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+
                 }} color="primary" onClick={() => {
                   const productAmount = amount[product.idProduct] || 1;
                   addProduct(product.idProduct, productAmount)
                 }} aria-label='add shopping cart' size='small' >
                   <AddShoppingCartIcon />
-                  Añadir al carrito
                 </IconButton>
 
-                <Button size="small" color="primary" onClick = {() => handleClickOpen(product.idProduct)}>
+                <Button size="small" color="primary" onClick={() => handleClickOpen(product.idProduct)}>
                   Info
                 </Button>
                 <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
@@ -146,4 +150,4 @@ function Target({ products }) {
 
 
 //exportamos el componente y la funcion de info para poder usarla en otros componentes
-export default Target ;
+export default Target;

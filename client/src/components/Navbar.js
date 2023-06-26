@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect,useRef } from 'react'
 import { AppBar, Toolbar, Typography, Button, Link, Container, IconButton } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -13,6 +13,10 @@ import { productContext } from './ProductContext';
 import jwt_decode from 'jwt-decode';
 import CircularProgress from '@mui/material/CircularProgress';
 import jwtDecode from 'jwt-decode';
+import {Modal, Box} from '@mui/material';
+import {useState} from 'react';
+
+
 
 function Navbar() {
 
@@ -21,6 +25,7 @@ function Navbar() {
   const [isAdmin, setIsAdmin] = React.useState(false)
   const [username, setUserName] = React.useState("")
   const [isLoading, setIsLoading] = React.useState(true)
+  const [open, setOpen] = useState(false);
   // define el estado de isLogged si hay un token en el localstorage
   React.useEffect(() => {
     
@@ -52,6 +57,14 @@ function Navbar() {
 
   }, [])
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   const handleLogout = () => {
     setIsLogged(false)
@@ -61,7 +74,6 @@ function Navbar() {
 
     window.location.reload()
   }
-
 
   return (
     <div className='root'>
@@ -84,11 +96,15 @@ function Navbar() {
               <>
 
                 {isAdmin ? (
-                  <IconButton color="inherit" onClick={() => navigate('/admin')} >
+                  <div>
+                  <IconButton color="inherit" onClick={() => handleClickOpen()} >
                     <Typography variant='body-1' fontSize="14px">
-                      Agregar Producto
+                      Gestionar Productos
                     </Typography>
                   </IconButton>
+                    <Options isOpen={open} onClose={handleClose}  /> 
+                  </div>
+                  
                 )
                   : (
 
@@ -187,6 +203,67 @@ function Search() {
 
 }
 
+function Options ({isOpen,onClose}){
+  //creamos un modelo para mostrar los botones de crear producto, editar producto y eliminar producto
+
+  const navigate = useNavigate()
+
+  const handleCreate = () => {
+    navigate('/admin')
+    onClose()
+  }
+
+  const handleEdit = () => {
+    navigate('/admin/update')
+    onClose()
+  }
+
+  const handleDelete = () => {
+    navigate('/admin/delete')
+    onClose()
+  }
+
+  const handleCloseModal = () => {
+    onClose()
+  }
+
+  const modalRef = useRef()
+ 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        handleCloseModal();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <Modal open={isOpen} onClose={handleCloseModal}>
+      <div className="modal" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',background:'trasparent' }}>
+        <div className="modal-content" ref={modalRef}>
+          <Button variant="contained" color="success" className="modal-button" onClick={handleCreate}>
+            Crear Producto
+          </Button>
+          <Button variant="contained" color="success" className="modal-button" onClick={handleEdit}>
+            Editar Producto
+          </Button>
+          <Button variant="contained" color="success" className="modal-button" onClick={handleDelete}>
+            Eliminar Producto
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+  
+
+  
+}
 
 
 export default Navbar

@@ -11,8 +11,13 @@ const ProductProvider = ({ children }) => {
     setProducts(newProducts);
   };
 
+  const deleteProduct = (id) => {
+    const newProducts = products.filter((product) => product.id !== id);
+    setProducts(newProducts);
+  };
+
   return (
-    <productContext.Provider value={{ products, updateProducts }}>
+    <productContext.Provider value={{ products, updateProducts,deleteProduct }}>
       {children}
     </productContext.Provider>
   );

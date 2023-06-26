@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, } from "react";
-import { Card, CardContent, Table, TableContainer, Typography, Button } from "@mui/material";
+import { Card, CardContent, TableContainer, Typography, Button } from "@mui/material";
 import { productContext } from "./ProductContext";
 import { CircularProgress } from "@mui/material";
 import { Modal } from "@mui/material";
@@ -271,7 +271,8 @@ const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
 function Payment({ total,productsToSend}) {
   const [payment, setPayment] = useState([]);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState('');
+  const [orderConfirmation, setOrderConfirmation] = useState(null);
   
   const handleSubmitOrder = async (event) => {
     if (selectedPayment === null) {
@@ -289,12 +290,13 @@ function Payment({ total,productsToSend}) {
         productsToSend,
         total
       })
-
+      
     });
     const data = await response.json();
 
     if (data.message === "Order created successfully") {
-      confirm(data)
+      alert("Orden creada con exito");
+      setOrderConfirmation(data);
     }
 
   };
@@ -310,6 +312,7 @@ function Payment({ total,productsToSend}) {
   const handlePaymentModalClose = () => {
     setIsPaymentModalOpen(false);
   };
+
 
   const handleSubmit = async (event) => {
 
@@ -380,12 +383,17 @@ function Payment({ total,productsToSend}) {
         onPaymentAdded={handleSubmit}
       />
       <Button variant="contained" color="success" onClick={handleSubmitOrder} >Pagar</Button>
+      {orderConfirmation  && <Confirm order={orderConfirmation} />}
 
     </div>
   );
 }
 
-const confirm = (order) => {
+const Confirm = ({order}) => {
+  if(!order) {
+    return null;
+    }
+
   return (
     <Modal open={true} >
       <div className="payment-modal">
