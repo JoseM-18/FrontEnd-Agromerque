@@ -27,10 +27,11 @@ function App() {
       try {
         const response = await fetch('http://localhost:4000/product');
         const data = await response.json();
-        if (data.error) {
-          console.log(data.error);
+        if (data.message === "Product doesn't found") {
+          alert("No hay productos");
           return;
         }
+        console.log("Se cargaron los productos");
         setProductos(data);
       } catch (error) {
         console.log(error);

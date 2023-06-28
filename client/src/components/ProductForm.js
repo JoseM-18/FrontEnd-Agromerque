@@ -191,7 +191,7 @@ function ProductForm() {
         />
 
         <TextField
-          label="Peso"
+          label="Peso (Kg.)"
           variant="outlined"
           fullWidth
           margin="normal"
