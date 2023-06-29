@@ -1,20 +1,20 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import LoginForm from './components/LoginForm'
-import Navbar from './components/Navbar'
-import RegisterForm from './components/RegisterForm'
-import Body from './components/Body'
-import ShoppingCart from './components/ShoppingCart'
-import ProductForm from './components/ProductForm'
-import ProductDetail from './components/ProductDetail'
-import Userprofile from './components/Userprofile'
-import Checkout from './components/Checkout'
-import Search from './components/SearchResult'
-import DeleteProduct  from './components/DeleteProduct'
-import UpdateProduct from './components/UpdateProduct'
+import LoginForm from './components/js/LoginForm'
+import Navbar from './components/js/Navbar'
+import RegisterForm from './components/js/RegisterForm'
+import Body from './components/js/Body'
+import ShoppingCart from './components/js/ShoppingCart'
+import ProductForm from './components/js/ProductForm'
+import ProductDetail from './components/js/ProductDetail'
+import Userprofile from './components/js/Userprofile'
+import Checkout from './components/js/Checkout'
+import Search from './components/js/SearchResult'
+import DeleteProduct  from './components/js/DeleteProduct'
+import UpdateProduct from './components/js/UpdateProduct'
 import { Container } from '@mui/material'
-import { ProductProvider } from './components/ProductContext';
+import { ProductProvider } from './components/js/ProductContext';
 import React, { useEffect, useState } from 'react';
-import { productContext } from './components/ProductContext';
+import { productContext } from './components/js/ProductContext';
 
 function App() {
 

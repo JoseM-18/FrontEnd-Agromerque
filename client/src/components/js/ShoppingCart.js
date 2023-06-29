@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import Select from '@mui/material/Select';
 import { productContext } from './ProductContext';
-import './css/ShoppingCart.css'
+import '../css/ShoppingCart.css'
 import { useNavigate } from 'react-router-dom';
 import { FormControl } from '@mui/material';
 import { IconButton } from '@mui/material';
@@ -31,7 +31,6 @@ function Cart() {
   };
 
   const fetchCartData = async () => {
-    // Obtener la información del carrito desde el almacenamiento local
 
     try {
       

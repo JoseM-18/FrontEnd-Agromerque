@@ -4,7 +4,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
-import "./css/Navbar.css"
+import "../css/Navbar.css"
 import { useNavigate } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search';
 import { TextField, FormControl, InputLabel, Select, MenuItem, InputBase, styled, alpha } from '@mui/material';

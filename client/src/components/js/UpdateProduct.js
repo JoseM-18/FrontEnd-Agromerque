@@ -4,7 +4,7 @@ import {Modal} from '@mui/material';
 import { productContext } from './ProductContext';
 import usePageTitle from './PageTitle';
 import { useContext } from 'react';
-import './css/UpdateProduct.css'
+import '../css/UpdateProduct.css'
 import { useNavigate } from 'react-router-dom';
 import {Snackbar } from '@mui/material';
 

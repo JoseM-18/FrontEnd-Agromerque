@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { productContext } from "./ProductContext";
-import "./css/ProductDetail.css";
+import "../css/ProductDetail.css";
 import { useParams } from "react-router-dom";
 import { Container } from '@mui/material';
 

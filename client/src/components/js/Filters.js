@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { productContext } from './ProductContext';
 import { Container, Grid, Typography } from '@mui/material';
 import Target from './Target';
-import "./css/Filters.css"
+import "../css/Filters.css"
 
 function Filters() {
 
@@ -73,7 +73,7 @@ function Filters() {
                     type="range"
                     id="price"
                     min='0'
-                    max='10' 
+                    max='10000' 
                     onChange={handleMinPriceChange}/>
                 <span> {minPrice} </span>
             </div>
@@ -94,7 +94,7 @@ function Filters() {
         <Container>
             <Grid container spacing={4}>
                 <div className="body" >
-                    <Target products={filteredProducts} s />
+                    <Target products={filteredProducts} />
                 </div>
             </Grid>
         </Container></>

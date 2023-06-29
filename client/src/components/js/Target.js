@@ -7,7 +7,7 @@ import { Button, CardActionArea, CardActions, Modal } from '@mui/material';
 import { useNavigate } from 'react-router'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import IconButton from '@mui/material/IconButton';
-import './css/Target.css'
+import '../css/Target.css'
 import SeeInfo from "./infoProduct";
 
 
@@ -71,14 +71,30 @@ function Target({ products }) {
     setIsInfoOpen(false)
   };
 
+  const numProducts = products.length;
+
+  const calculateCardWidth = (numProducts) => {
+    const minWidth = 30;
+    const maxWidth = 100;
+    const maxProductsPerRow = 3;
+
+    const cardWidth = Math.min(
+      maxWidth,
+      Math.max(minWidth, maxWidth / numProducts)
+    );
+
+    return cardWidth;
+
+  };
+
+
 
   return (
     <div className='Body' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}  >
 
       {products.map((product) => (
 
-
-        <Card key={product.idProduct} style={{ flex: `0 0 ${100 / products.length}%`, margin: '20px' }}>
+        <Card key={product.idProduct} style={{ flex: `0 0 ${calculateCardWidth(numProducts)}%`, maxWidth: '100%', margin: '1rem' }}>
           {products.length === 0 && (
             <Card style={{ flex: '0 0 30%', visibility: 'hidden' }} />
           )}

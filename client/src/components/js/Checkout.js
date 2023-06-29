@@ -8,7 +8,7 @@ import { FormControl } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import "./css/checkout.css"
+import "../css/checkout.css"
 import usePageTitle from "./PageTitle";
 import { useNavigate } from "react-router-dom";
 

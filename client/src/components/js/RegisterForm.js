@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import { Snackbar } from '@mui/material';
 import usePageTitle from './PageTitle';
+import '../css/RegisterForm.css'
 function RegisterForm() {
   usePageTitle('Registrarse - AgroMerque');
   const [open, setOpen] = useState(false);
@@ -95,7 +96,7 @@ function RegisterForm() {
       <h1>Registro</h1>
       <form onSubmit={handleSubmit} >
         
-        
+        <div className="register__form">
         <TextField
           label="Nombre"
           variant="outlined"
@@ -197,9 +198,13 @@ function RegisterForm() {
           onChange={handleChange}
 
         />
+        </div>
+        <br />
+        <div className="register__buttoms">
         <Button type="submit" variant="contained" color="primary">
           Registrarse
         </Button>
+        </div>
 
         <Snackbar
         open={open}

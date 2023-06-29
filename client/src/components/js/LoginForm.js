@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { Button, TextField } from '@mui/material'
-import "./css/LoginForm.css"
+import "../css/LoginForm.css"
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router-dom'
 import usePageTitle from './PageTitle'
@@ -105,11 +105,13 @@ function LoginForm() {
               helperText={passwordIncorrect && 'Contraseña incorrecta'}
               onChange={handleChange}
             />
-          
+          </div> 
+            <div className='botones'>
+
             <Button variant="contained" color="success" type='submit'>Entrar</Button>
             <Button variant="contained" color="success" type='submit' onClick={() => navigate('/')}>Cancelar</Button>
+            </div>
 
-          </div> 
         </form>
             
       </div>

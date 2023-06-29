@@ -1,7 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Snackbar,Alert } from "@mui/material";
 
 import {
   MDBCol,
@@ -19,17 +18,20 @@ import {
   MDBInput
 
 } from 'mdb-react-ui-kit';
-
+import { useNavigate } from "react-router";
 import usePageTitle from "./PageTitle";
 //pagina para el perfil del usuario
 function Userprofile() {
-
+  const [showSuccessMessage, setShowSuccessMessage] = React.useState(false);
+  const [showErrorMessage, setShowErrorMessage] = React.useState(false);
+  const [message, setMessage] = React.useState("");
   usePageTitle('Perfil de usuario');
   if (localStorage.getItem("token") === null) {
     window.location.href = '/login'
   }
   const token = localStorage.getItem("token");
   const decoded = jwt_decode(token);
+  const navigate = useNavigate();
 
   const [user, setUser] = React.useState([]);
   const [name, setName] = React.useState("");
@@ -45,6 +47,12 @@ function Userprofile() {
     const decoded = jwt_decode(token);
     const idUser = decoded.idUser;
 
+    if(name === "" || lastname === "" || username === "" || email === "" || phone === "" || address === "" || password === ""){
+      setMessage("Por favor, llene todos los campos");
+      setShowErrorMessage(true);
+      return;
+    }
+
 
     try {
       const response = await fetch(`http://localhost:4000/user/${idUser}`, {
@@ -56,10 +64,21 @@ function Userprofile() {
         body: JSON.stringify(data)
       });
       const res = await response.json();
-      alert("Se ha actualizado el perfil");
+
+      if(res.message === "User Updated"){
+        setMessage("Usuario actualizado correctamente");
+        setShowSuccessMessage(true);
+        //esperamos 3 segundos y redirigimos a la pagina de login
+        setTimeout(() => {
+          navigate('/')
+        }, 3000);
+
+        return;
+      }
+
     } catch (error) {
-      console.log(error);
-      alert("ups, algo salio mal");
+      setMessage("Error al actualizar el usuario");
+      setShowErrorMessage(true);
     }
   }
 
@@ -104,6 +123,11 @@ function Userprofile() {
     event.preventDefault();
     updateCustomer(data)
   }
+
+  const handleClose = (event) => {
+    navigate('/')
+
+  };
 
   return (
     <section style={{ backgroundColor: '#eee', marginTop: '30px' }}>
@@ -267,12 +291,12 @@ function Userprofile() {
                   <hr />
                   <MDBRow>
                     <MDBCol sm="3">
-                      <MDBBtn color="primary" type="submit" onClick={handleSubmit}>
-                        Guardar
+                      <MDBBtn color="primary" type="submit" onClick={handleSubmit} >
+                        Actualizar
                       </MDBBtn>
                     </MDBCol>
                     <MDBCol sm="3">
-                      <MDBBtn color="danger" type="submit">
+                      <MDBBtn color="danger" type="submit"  onClick={handleClose}>
                         Cancelar
                       </MDBBtn>
                     </MDBCol>
@@ -284,28 +308,21 @@ function Userprofile() {
           </MDBRow>
         </MDBValidation>
       </MDBContainer>
+      <Snackbar open={showErrorMessage} autoHideDuration={6000} onClose={() => setShowErrorMessage(false)}>
+        <Alert severity="error">
+          {message}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={showSuccessMessage} autoHideDuration={6000} onClose={() => setShowSuccessMessage(false)}>
+        <Alert severity="success">
+          {message}
+        </Alert>
+      </Snackbar>
+
     </section>
+    
 
   );
 }
-async function acutalizarDatos(data) {
-  try {
-    const response = await fetch("https://example.com/profile", {
-      method: "PUT", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-const data = { username: "example" };
-acutalizarDatos(data);
 
 export default Userprofile;
