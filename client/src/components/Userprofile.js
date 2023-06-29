@@ -39,11 +39,32 @@ function Userprofile() {
   const [address, setAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const updateCustomer = async (data) => {
+    const token = localStorage.getItem("token");
+    const decoded = jwt_decode(token);
+
+    try {
+      const response = await fetch(`http://localhost:4000/customer/${decoded.idCustomer}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": "token",
+        },
+        body: JSON.stringify(data)
+      });
+      const res = await response.json();
+      alert("Se ha actualizado el perfil");
+    } catch (error) {
+      console.log(error);
+      alert("ups, algo salio mal");
+    }
+  }
+
   const getUser = async () => {
+    const token = localStorage.getItem("token");
+    const decoded = jwt_decode(token);
 
-
-
-    const response = await fetch("http://localhost:4000/users", {
+    const response = await fetch(`http://localhost:4000/customer/${decoded.idUser}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -67,31 +88,22 @@ function Userprofile() {
     , []);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    const data = {
 
-    try {
-      const url = `http://localhost:4000/user/${decoded.idUser}`;
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": "token",
-        },
-        body: JSON.stringify({ name, lastname, email, phone, address, password }),
-      });
-      const data = await response.json();
-      alert("Se ha actualizado el perfil");
-
-    } catch (error) {
-      console.log(error);
-      alert("ups, algo salio mal");
+      "idUser": decoded.idUser,
+      "name": name,
+      "lastname": lastname,
+      "address": address,
+      "phone": phone
     }
+    console.log(data);
+    console.log(user);
+    event.preventDefault();
+    updateCustomer(data)
   }
 
-
-
   return (
-    <section style={{ backgroundColor: '#eee', marginTop: '30px' }  }>
+    <section style={{ backgroundColor: '#eee', marginTop: '30px' }}>
       <MDBContainer className="py-5">
         <MDBValidation className='row g-3'>
           <MDBRow>
@@ -254,5 +266,24 @@ function Userprofile() {
 
   );
 }
+async function acutalizarDatos(data) {
+  try {
+    const response = await fetch("https://example.com/profile", {
+      method: "PUT", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+const data = { username: "example" };
+acutalizarDatos(data);
 
 export default Userprofile;
