@@ -34,6 +34,7 @@ function Userprofile() {
   const [user, setUser] = React.useState([]);
   const [name, setName] = React.useState("");
   const [lastname, setLastname] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [address, setAddress] = React.useState("");
@@ -42,13 +43,15 @@ function Userprofile() {
   const updateCustomer = async (data) => {
     const token = localStorage.getItem("token");
     const decoded = jwt_decode(token);
+    const idUser = decoded.idUser;
+
 
     try {
-      const response = await fetch(`http://localhost:4000/customer/${decoded.idCustomer}`, {
+      const response = await fetch(`http://localhost:4000/user/${idUser}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": "token",
+          "x-access-token": token,
         },
         body: JSON.stringify(data)
       });
@@ -64,11 +67,11 @@ function Userprofile() {
     const token = localStorage.getItem("token");
     const decoded = jwt_decode(token);
 
-    const response = await fetch(`http://localhost:4000/customer/${decoded.idUser}`, {
+    const response = await fetch(`http://localhost:4000/user/${decoded.idUser}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": "token",
+        "x-access-token": token,
       },
     });
     const data = await response.json();
@@ -78,7 +81,7 @@ function Userprofile() {
     setEmail(data.email);
     setPhone(data.phone);
     setAddress(data.address);
-    setPassword(data.password);
+    setUsername(data.username);
   }
 
 
@@ -93,11 +96,11 @@ function Userprofile() {
       "idUser": decoded.idUser,
       "name": name,
       "lastname": lastname,
+      "username": username,
+      "password": password,
       "address": address,
       "phone": phone
     }
-    console.log(data);
-    console.log(user);
     event.preventDefault();
     updateCustomer(data)
   }
@@ -163,10 +166,48 @@ function Userprofile() {
                       </MDBValidationItem>
                     </MDBCol>
 
-
-
                   </MDBRow>
+
                   <hr />
+                  <MDBRow>
+                    <MDBCol sm="3">
+                      <MDBCardText>Username</MDBCardText>
+                    </MDBCol>
+                    <MDBCol sm="9">
+                      <MDBValidationItem>
+
+                        <MDBInput
+                          name='username'
+                          id='validationCustom01'
+                          required
+                          label='Username'
+                          value={username}
+                          onChange={(event) => setUsername(event.target.value)}
+                        />
+                      </MDBValidationItem>
+                    </MDBCol>
+                    </MDBRow>
+                    <hr />
+
+                  <MDBRow>
+                    <MDBCol sm="3">
+                      <MDBCardText>Contraseña</MDBCardText>
+                    </MDBCol>
+                    <MDBCol sm="9">
+                      <MDBValidationItem>
+
+                        <MDBInput
+                          name='password'
+                          id='validationCustom01'
+                          required
+                          label='Contraseña'
+                          value={password}
+                          onChange={(event) => setPassword(event.target.value)}
+                        />
+                      </MDBValidationItem>
+                    </MDBCol>
+                  </MDBRow> 
+                    <hr />
                   <MDBRow>
                     <MDBCol sm="3">
                       <MDBCardText>Correo</MDBCardText>
@@ -200,25 +241,6 @@ function Userprofile() {
                           id='typeNumber'
                           required
                           label='Celular'
-                        />
-                      </MDBValidationItem>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Contraseña</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBValidationItem>
-                        <MDBInput
-                          value={password}
-                          onChange={(event) => setPassword(event.target.value)}
-                          type='text'
-                          name='password'
-                          id='validationCustom03'
-                          required
-                          label='Contraseña'
                         />
                       </MDBValidationItem>
                     </MDBCol>
