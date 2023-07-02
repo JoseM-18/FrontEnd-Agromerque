@@ -10,13 +10,13 @@ import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import "../css/checkout.css"
 import usePageTitle from "./PageTitle";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 
 const token = localStorage.getItem('token');
 function Checkout() {
   usePageTitle('Checkout');
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { productos } = useContext(productContext);
   const [productCart, setProductCart] = useState([]);
@@ -24,48 +24,48 @@ const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [productsToSend, setProductsToSend] = useState([]);
 
- 
+
   const handleSubmit = async (event) => {
 
-    const cartInfo = await fetch('http://localhost:4000/shoppingCart/products', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
+    try {
+
+      const cartInfo = await fetch('http://localhost:4000/shoppingCart/products', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+
+      });
+      const productsInf = await cartInfo.json();
+
+      const productsWithAmount = productsInf.map((product) => {
+        const productInfo = productos.find((p) => p.idProduct === product.idProduct);
+        return { ...productInfo, amount: product.amount };
+      }
+      );
+
+      const productsToSend = productsWithAmount.map((product) => {
+        return { idProduct: product.idProduct, amount: product.amount };
       }
 
-    });
-    const productsInf = await cartInfo.json();
+      );
 
+      setProductsToSend(productsToSend);
+      setProductCart(productsWithAmount);
+      setIsLoading(false);
 
-    if(productsInf.message === "Cart doesn't found"){
-      alert("El carrito esta vacio");
-      navigate('/');
-      return;
+      setTotal(productsWithAmount.reduce((acc, product) => acc + product.salePrice * product.amount, 0));
     }
-
-    const productsWithAmount = productsInf.map((product) => {
-      const productInfo = productos.find((p) => p.idProduct === product.idProduct);
-      return { ...productInfo, amount: product.amount };
+    catch (error) {
+      alert("No se pudo cargar el carrito de compras");
     }
-    );
-
-    const productsToSend = productsWithAmount.map((product) => {
-      return { idProduct: product.idProduct, amount: product.amount };
-    }
-
-    );
-
-    setProductsToSend(productsToSend);
-    setProductCart(productsWithAmount);
-    setIsLoading(false);
-
-    setTotal(productsWithAmount.reduce((acc, product) => acc + product.salePrice * product.amount, 0));
-  }
+  };
 
   useEffect(() => {
     handleSubmit();
   }, []); // El segundo parámetro [] asegura que el efecto se ejecute solo una vez al montar el componente
+
 
 
   return (
@@ -80,7 +80,11 @@ const navigate = useNavigate();
 
 
         <div className="body">
-          <Typography variant="h6">Comprar productos</Typography>
+          {//ajustamos el estilo de la letra y el color de la letra}
+          }
+
+          <Typography variant="h6" style={{ fontWeight: 'bold', marginTop: '15%', fontSize: '40px' }}>Comprar productos</Typography>
+          <hr></hr>
 
           {productCart.length > 0 ? (
             <TableContainer component={Card}>
@@ -91,13 +95,13 @@ const navigate = useNavigate();
                   <Typography variant="h6">Cantidad:{product.amount}</Typography>
                   <Typography variant="h6">Precio: ${product.salePrice}</Typography>
                   <Typography variant="h6">SubTotal: ${product.salePrice * product.amount}</Typography>
-                  <Typography variant="h6" >Descripcion del producto: {product.description} </Typography>
+                  <Typography variant="h6" style={{ textAlign: "center" }}  >Descripcion del producto: {product.description} </Typography>
+                  <hr></hr>
 
                 </CardContent>
-
               ))}
-                <Typography variant="h6">Total: ${total}</Typography>
-                <Payment productsToSend={productsToSend} total={total} />
+              <Typography variant="h6" style={{ textAlign: 'center' }} >Total: ${total}</Typography>
+              <Payment productsToSend={productsToSend} total={total} />
 
             </TableContainer>
             //zona de metodos de pago
@@ -111,7 +115,7 @@ const navigate = useNavigate();
   );
 }
 
-const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
+const PaymentModal = ({ isOpen, onClose, onPaymentAdded }) => {
 
   const [payment, setPayment] = useState({
     cardNumber: 0,
@@ -144,38 +148,44 @@ const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
       return;
     }
 
-    if(payment.cardNumber.match(/^4\d{15}$/)){
+    if (payment.cardNumber.match(/^4\d{15}$/)) {
       setPayment({ ...payment, target: 'Visa' });
 
-    }else if(payment.cardNumber.match(/^5\d{15}$/)){
+    } else if (payment.cardNumber.match(/^5\d{15}$/)) {
       setPayment({ ...payment, target: 'MasterCard' });
-    }else{
+    } else {
       alert("El numero de tarjeta no es valido");
       return;
     }
 
-    const response = await fetch('http://localhost:4000/paymentMethod', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
-      },
-      body: JSON.stringify(payment)
+    try {
 
-    });
+      const response = await fetch('http://localhost:4000/paymentMethod', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        body: JSON.stringify(payment)
 
-    const data = await response.json();
+      });
 
-    if (data.message === "PaymentMethod created") {
-      alert("Pago realizado con exito");
-      onPaymentAdded();
-      onClose();
-    }
+      const data = await response.json();
 
-    if (data.message === "PaymentMethod already exist") {
-      alert("El metodo de pago ya existe");
-      onClose();
-    }
+      if (data.message === "PaymentMethod created") {
+        alert("Pago realizado con exito");
+        onPaymentAdded();
+        onClose();
+      }
+
+      if (data.message === "PaymentMethod already exist") {
+        alert("El metodo de pago ya existe");
+        onClose();
+      }
+
+    } catch (error) {
+      alert("tuvimos un problema al procesar el pago")
+    };
 
   };
 
@@ -268,43 +278,49 @@ const PaymentModal = ({ isOpen, onClose,onPaymentAdded  }) => {
 
 }
 
-function Payment({ total,productsToSend}) {
+function Payment({ total, productsToSend }) {
   const [payment, setPayment] = useState([]);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState('');
   const [orderConfirmation, setOrderConfirmation] = useState(null);
-  
+  const navigate = useNavigate();
+
   const handleSubmitOrder = async (event) => {
     if (selectedPayment === null) {
       alert("Debe seleccionar un metodo de pago");
       return;
     }
-    const response = await fetch('http://localhost:4000/Order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
-      },
-      body: JSON.stringify({
-        selectedPayment,
-        productsToSend,
-        total
-      })
-      
-    });
-    const data = await response.json();
+    try {
 
-    if (data.message === "Order created successfully") {
-      alert("Orden creada con exito");
-      setOrderConfirmation(data);
-    }
+      const response = await fetch('http://localhost:4000/Order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        body: JSON.stringify({
+          selectedPayment,
+          productsToSend,
+          total
+        })
 
+      });
+      const data = await response.json();
+
+      if (data.message === "Order created successfully") {
+        alert("Orden creada con exito");
+        setOrderConfirmation(data);
+      }
+
+    } catch (error) {
+      alert("tuvimos un problema al procesar la orden")
+    };
   };
   const handleChangePayment = (event) => {
     const selectedPayment = event.target.value;
     setSelectedPayment(selectedPayment);
-  }; 
-  
+  };
+
   const handlePaymentModalOpen = () => {
     setIsPaymentModalOpen(true);
   };
@@ -316,24 +332,30 @@ function Payment({ total,productsToSend}) {
 
   const handleSubmit = async (event) => {
 
-    const response = await fetch('http://localhost:4000/paymentMethod', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
+    try {
+
+      const response = await fetch('http://localhost:4000/paymentMethod', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+      });
+
+      const data = await response.json();
+      if (data.message === "Token is not valid") {
+        alert("Debe iniciar sesion");
+        return;
       }
-    });
 
-    const data = await response.json();
-    if(data.message === "Token is not valid"){
-      alert("Debe iniciar sesion");
-      return;
-    }
+      if (data.message !== "There are not payment methods") {
+        setPayment(data);
+      }
 
-    if(data.message !== "There are not payment methods"){
-      setPayment(data);
-    }
 
+    } catch (error) {
+      alert("tuvimos un problema al procesar la orden")
+    };
 
   }
 
@@ -356,9 +378,9 @@ function Payment({ total,productsToSend}) {
             {payment.map((payment) => (
               <MenuItem value={payment}>{payment.target} Terminada en {payment.cardNumber.substring(payment.cardNumber.length - 4)}
               </MenuItem>
-              
 
-              
+
+
             ))}
           </Select>
 
@@ -383,21 +405,26 @@ function Payment({ total,productsToSend}) {
         onPaymentAdded={handleSubmit}
       />
       <Button variant="contained" color="success" onClick={handleSubmitOrder} >Pagar</Button>
-      {orderConfirmation  && <Confirm order={orderConfirmation} />}
+      {orderConfirmation && <Confirm order={orderConfirmation} />}
 
     </div>
   );
 }
 
-const Confirm = ({order}) => {
-  if(!order) {
-    return null;
-    }
 
+const Confirm = ({ order }) => {
+  const navigate = useNavigate();
+  if (!order) {
+    return null;
+  }
+  const redirect = () => {
+    navigate('/');
+    window.location.reload();
+  }
   return (
     <Modal open={true} >
-      <div className="payment-modal">
-        <Typography variant="h6">Su orden ha sido creada con exito</Typography>
+      <div className="payment-modal" style={{ textAlign: 'center' }}>
+        <Typography variant="h6" style={{ fontSize: "30px", fontWeight: 'bold' }}>Su orden ha sido creada con exito</Typography>
         <Typography variant="h6">Numero de orden: {order.idOrder}</Typography>
         <Typography variant="h6">Total: {order.orderTotal}</Typography>
         <Typography variant="h6">Productos: {order.products.map((product) => (
@@ -405,14 +432,16 @@ const Confirm = ({order}) => {
             <Typography variant="h6">Nombre: {product.name}</Typography>
             <Typography variant="h6">Cantidad: {product.amount}</Typography>
             <Typography variant="h6">Precio: {product.salePrice}</Typography>
+            <hr />
           </div>
         ))}</Typography>
+        <Button variant="contained" color="success" onClick={() => redirect()}>Aceptar</Button>
+
       </div>
     </Modal>
   );
 
 };
 
-
-
 export default Checkout;
+

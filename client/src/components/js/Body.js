@@ -8,6 +8,9 @@ import usePageTitle from './PageTitle';
 function Body() {
     
     usePageTitle('AgroMerque');
+    //recargamos la pagina cada vez que se actualiza el contexto
+    
+
     const { productos } = useContext(productContext);
 
     return(

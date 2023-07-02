@@ -5,7 +5,7 @@ import usePageTitle from './PageTitle';
 import { Button } from '@mui/material';
 import { Snackbar } from '@mui/material';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-
+import {Alert } from '@mui/material';
 
 
 function ProductForm() {
@@ -25,6 +25,9 @@ function ProductForm() {
     harvestDate: '',
   });
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [message, setMessage] = useState('');
 
   const [open, setOpen] = useState(false);
 
@@ -47,14 +50,14 @@ function ProductForm() {
     });
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const empyField = Object.values(product).some((value) => value === "")
 
     if (empyField) {
-      alert("Por favor, llene todos los campos")
+      setMessage("Por favor, llene todos los campos")
+      setShowErrorMessage(true);
       return
     }
 
@@ -73,18 +76,26 @@ function ProductForm() {
       const date = await res.json()
 
       if (date.message === 'Product created successfully') {
-        alert(date.message)
+        setMessage("producto creado exitosamente")
+        setShowSuccessMessage(true);
+        //esperamos 3 segundos para redireccionar
+        setTimeout(() => {
         window.location.href = '/'
+        }, 3000);
+
       }
       if (date.message === 'Product already exists') {
-        alert(date.message)
+        setMessage("El producto ya existe")
+        setShowErrorMessage(true);
       }
 
       if (date.message === "Please. Send all data") {
-        alert(date.message)
+        setMessage("Por favor, envie todos los datos")
+        setShowErrorMessage(true);
       }
     } catch (error) {
-      console.log(error)
+      setMessage("Error al crear el producto")
+      setShowErrorMessage(true);
     }
 
 
@@ -92,9 +103,10 @@ function ProductForm() {
   };
 
   return (
-    <div className="register">
-      <h1>Registro</h1>
-      <form onSubmit={handleSubmit} >
+    <div className="body">
+      <h1 >Registro</h1>
+      <form onSubmit={handleSubmit} className='form' >
+        <div className='form__container'>
 
         <TextField
           label="id del Producto"
@@ -222,16 +234,22 @@ function ProductForm() {
           onChange={handleChange}
         />
 
-        <Button type="submit" variant="contained" color="primary">
+        </div>
+
+        <Button type="submit" variant="contained" color="primary" className='boton'>
           Crear producto
         </Button>
 
-        <Snackbar
-          open={open}
-          onClose={handleClose}
-          message="Usuario creado exitosamente"
-          autoHideDuration={3000}
-        />
+        <Snackbar open={showErrorMessage} autoHideDuration={6000} onClose={() => setShowErrorMessage(false)}>
+        <Alert severity="error">
+          {message}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={showSuccessMessage} autoHideDuration={6000} onClose={() => setShowSuccessMessage(false)}>
+        <Alert severity="success">
+          {message}
+        </Alert>
+      </Snackbar>
 
       </form>
     </div>
@@ -263,7 +281,7 @@ function Categories({ onCategoryChange, label, variant, fullWidth, margin, style
           onCategoryChange(event.target.value);
         }}
       >
-        {categories.map((category) => (
+        {categories && categories.map((category) => (
           <MenuItem key={category.idCategory} value={category.idCategory}>
             {category.nameCategory}
           </MenuItem>
@@ -278,9 +296,5 @@ const textFieldStyle = {
   margin: '10px 3px',
 };
 
-function options (){
-
-  
-}
 
 export default ProductForm;

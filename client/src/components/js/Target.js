@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions, Modal } from '@mui/material';
+import { Button, CardActionArea, CardActions } from '@mui/material';
 import { useNavigate } from 'react-router'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import IconButton from '@mui/material/IconButton';
 import '../css/Target.css'
 import SeeInfo from "./infoProduct";
+import { Snackbar } from '@mui/material';
 
 
 function Target({ products }) {
@@ -24,37 +25,58 @@ function Target({ products }) {
     }))
   }
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [message, setMessage] = useState('');
 
 
   const addProduct = async (idProduct, amount) => {
-    const response = await fetch(`http://localhost:4000/shoppingCartProduct/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
-      }
-      , body: JSON.stringify({
-        idProduct,
-        amount
+    try {
+
+      const response = await fetch(`http://localhost:4000/shoppingCartProduct/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+        , body: JSON.stringify({
+          idProduct,
+          amount
+        })
       })
-    })
 
-    const data = await response.json()
-    console.log(data)
-    if (data === 'the product was added to the cart ' || data === 'the product was added to the cart and the stock was updated') {
-      navigate('/cart')
-    }
-    if (data === 'Product already exists') {
-      navigate('/cart')
-    }
+      const data = await response.json()
+      console.log(data)
+      if (data.message === 'the product was added to the cart ') {
+        setMessage('Producto añadido al carrito ')
+        setShowSuccessMessage(true)
 
-    if (data === "Unauthorized!") {
-      navigate('/login')
-    }
+      }
 
-    if (data === 'you are admin, you can not buy products') {
-      alert('you are admin, you can not buy products')
-      return;
+      if (data.message === 'the product was added to the cart and the stock was updated') {
+        setMessage('Se agregaron mas unidades al carrito')
+        setShowSuccessMessage(true)
+        return;
+      }
+
+      if (data.message === "Unauthorized!") {
+        setMessage('No estas autorizado para comprar productos, redirigiendo...')
+        setShowErrorMessage(true)
+
+        setTimeout(() => {
+          navigate('/login')
+        }, 3000);
+        return;
+      }
+
+      if (data.message === 'you are admin, you can not buy products') {
+        setMessage('Eres administrador, no puedes comprar productos')
+        setShowErrorMessage(true)
+        return;
+      }
+
+    } catch (error) {
+      alert("Error al agregar producto al carrito")
     }
   }
 
@@ -153,7 +175,26 @@ function Target({ products }) {
                   Info
                 </Button>
                 <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
+
               </div>
+              <Snackbar
+                open={showSuccessMessage}
+                autoHideDuration={3000}
+                onClose={() => setShowSuccessMessage(false)}
+                message={message}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                style={{ marginTop: '30%' }}
+              />
+
+              <Snackbar
+                open={showErrorMessage}
+                autoHideDuration={3000}
+                onClose={() => setShowErrorMessage(false)}
+                message={message}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                style={{ marginTop: '5%' }}
+              />
+
             </CardActions>
           </div>
         </Card>

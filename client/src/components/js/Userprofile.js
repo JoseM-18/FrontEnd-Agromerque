@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import { Snackbar,Alert } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
 
 import {
   MDBCol,
@@ -47,7 +47,7 @@ function Userprofile() {
     const decoded = jwt_decode(token);
     const idUser = decoded.idUser;
 
-    if(name === "" || lastname === "" || username === "" || email === "" || phone === "" || address === "" || password === ""){
+    if (name === "" || lastname === "" || username === "" || email === "" || phone === "" || address === "" || password === "") {
       setMessage("Por favor, llene todos los campos");
       setShowErrorMessage(true);
       return;
@@ -65,7 +65,7 @@ function Userprofile() {
       });
       const res = await response.json();
 
-      if(res.message === "User Updated"){
+      if (res.message === "User Updated") {
         setMessage("Usuario actualizado correctamente");
         setShowSuccessMessage(true);
         //esperamos 3 segundos y redirigimos a la pagina de login
@@ -85,22 +85,26 @@ function Userprofile() {
   const getUser = async () => {
     const token = localStorage.getItem("token");
     const decoded = jwt_decode(token);
+    try {
+      const response = await fetch(`http://localhost:4000/user/${decoded.idUser}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      const data = await response.json();
+      setUser(data);
+      setName(data.name);
+      setLastname(data.lastname);
+      setEmail(data.email);
+      setPhone(data.phone);
+      setAddress(data.address);
+      setUsername(data.username);
 
-    const response = await fetch(`http://localhost:4000/user/${decoded.idUser}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": token,
-      },
-    });
-    const data = await response.json();
-    setUser(data);
-    setName(data.name);
-    setLastname(data.lastname);
-    setEmail(data.email);
-    setPhone(data.phone);
-    setAddress(data.address);
-    setUsername(data.username);
+    } catch (error) {
+      alert("Error al obtener el usuario");
+    }
   }
 
 
@@ -210,8 +214,8 @@ function Userprofile() {
                         />
                       </MDBValidationItem>
                     </MDBCol>
-                    </MDBRow>
-                    <hr />
+                  </MDBRow>
+                  <hr />
 
                   <MDBRow>
                     <MDBCol sm="3">
@@ -230,8 +234,8 @@ function Userprofile() {
                         />
                       </MDBValidationItem>
                     </MDBCol>
-                  </MDBRow> 
-                    <hr />
+                  </MDBRow>
+                  <hr />
                   <MDBRow>
                     <MDBCol sm="3">
                       <MDBCardText>Correo</MDBCardText>
@@ -296,7 +300,7 @@ function Userprofile() {
                       </MDBBtn>
                     </MDBCol>
                     <MDBCol sm="3">
-                      <MDBBtn color="danger" type="submit"  onClick={handleClose}>
+                      <MDBBtn color="danger" type="submit" onClick={handleClose}>
                         Cancelar
                       </MDBBtn>
                     </MDBCol>
@@ -320,7 +324,7 @@ function Userprofile() {
       </Snackbar>
 
     </section>
-    
+
 
   );
 }

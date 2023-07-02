@@ -24,9 +24,20 @@ function Cart() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
-
+  //funcion para eliminar un producto del carrito de compras 
   const removeProduct = (id) => {
     const newProducts = products.filter((product) => product.idProduct !== id);
+    setProducts(newProducts);
+  };
+
+  const removeQuantity = (idProduct, amount) => {
+    const newProducts = products.map((product) => {
+      if (product.idProduct === idProduct) {
+        return { ...product, amount: product.amount - amount };
+      }
+      return product;
+    });
+    console.log(newProducts);
     setProducts(newProducts);
   };
 
@@ -115,7 +126,7 @@ function Cart() {
                     <h1 className='botones'>
                       <Button size='small' variant="outlined" color="primary" onClick={() => handleClickOpen(product.idProduct)} >Ver producto</Button>
                       <SeeInfo idProduct={selectedProductId} isOpen={isInfoOpen} onClose={handleClose} />
-                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products={products} removeProduct={removeProduct} />}
+                      {product.idProduct && <DeleteQuantity idProduct={product.idProduct} amount={product.amount} products={products} removeProduct={removeProduct} removeQuantity={removeQuantity} />}
                     </h1>
                   </CardContent>
                 ))}
@@ -137,7 +148,7 @@ function Cart() {
   );
 }
 
-function DeleteQuantity({ idProduct, amount, products, removeProduct }) {
+function DeleteQuantity({ idProduct, amount, removeProduct, removeQuantity }) {
   const [open, setOpen] = useState(false);
   const [productToElim, setProductToElim] = useState({ idProduct: idProduct, amount: 1 });
 
@@ -147,8 +158,6 @@ function DeleteQuantity({ idProduct, amount, products, removeProduct }) {
       amount: event.target.value
     });
   };
-
-
 
   const handleClose = (event, reason) => {
 
@@ -164,7 +173,9 @@ function DeleteQuantity({ idProduct, amount, products, removeProduct }) {
 
   const handleDelete = async () => {
 
-    const resul = await fetch('http://localhost:4000/shoppingCart', {
+    try{
+
+      const resul = await fetch('http://localhost:4000/shoppingCart', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -176,26 +187,21 @@ function DeleteQuantity({ idProduct, amount, products, removeProduct }) {
       })
     });
     const data = await resul.json();
-    if (data === 'the product has been updated') {
-      console.log('entro');
-      const newProducts = products.map((product) => {
-        if (product.idProduct === productToElim.idProduct) {
-          return { ...product, amount: product.amount - productToElim.amount };
-        } else {
-          return product;
-        }
-
-      });
-      localStorage.setItem('productsCart', JSON.stringify(newProducts));
-
+    if (data.message === 'product updated succesfully') {
+      removeQuantity(productToElim.idProduct, productToElim.amount);
     }
 
-    if (data === 'the product has been deleted') {
+    if (data.message === 'the product has been deleted') {
       removeProduct(productToElim.idProduct);
+
     }
     console.log(data);
     setOpen(false);
     handleClose();
+    }catch(error){
+      alert('Error al eliminar el producto')
+    }
+    
   };
 
   return (

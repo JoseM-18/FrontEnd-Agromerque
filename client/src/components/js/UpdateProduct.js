@@ -56,9 +56,16 @@ function UpdateProduct() {
       body: JSON.stringify(productData)
     });
     const data = await res.json();
+    console.log(data.message);
 
     if(data.message === 'Product updated successfully'){
       setOpen(true);
+      //esperamos 3 segundos para cerrar el modal y redirigir al usuario
+      setTimeout(() => {
+        setOpen(false);
+        window.location.href = '/';
+      }
+      , 3000);
       
     }
     if(data.message === 'Producto no encontrado'){
