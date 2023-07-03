@@ -75,6 +75,12 @@ function Target({ products }) {
         return;
       }
 
+      if(data.message === 'the product is not available in the stock'){
+        setMessage('La cantidad solicitada no esta disponible, en el stock solo hay ' + data.stock + ' unidades')
+        setShowErrorMessage(true)
+        return;
+      }
+
     } catch (error) {
       alert("Error al agregar producto al carrito")
     }

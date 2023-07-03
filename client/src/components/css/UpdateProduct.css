@@ -1,0 +1,15 @@
+.form{
+
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1rem;
+    margin-bottom: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+
+
+}
+
+.body h2{
+    font-size: 2rem;
+    display: flex;
+}

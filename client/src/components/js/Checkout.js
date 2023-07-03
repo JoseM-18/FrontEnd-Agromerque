@@ -27,6 +27,7 @@ function Checkout() {
 
   const handleSubmit = async (event) => {
 
+    
     try {
 
       const cartInfo = await fetch('http://localhost:4000/shoppingCart/products', {
@@ -79,11 +80,11 @@ function Checkout() {
       ) : (
 
 
-        <div className="body">
+        <div className="body" style={{background:'#7ED84E', marginTop:'1%'}}>
           {//ajustamos el estilo de la letra y el color de la letra}
           }
 
-          <Typography variant="h6" style={{ fontWeight: 'bold', marginTop: '15%', fontSize: '40px' }}>Comprar productos</Typography>
+          <Typography variant="h6" style={{ fontWeight: 'bold', marginTop: '10%', fontSize: '50px' }}>Comprar productos</Typography>
           <hr></hr>
 
           {productCart.length > 0 ? (
@@ -91,16 +92,15 @@ function Checkout() {
 
               {productCart.map((product) => (
                 <CardContent key={product.idProduct} className="infoProducts">
-                  <Typography variant="h6" className="nameProd"> {product.name}</Typography>
+                  <Typography variant="h6" className="nameProd" style={{fontSize:'2rem'}}> {product.name}</Typography>
                   <Typography variant="h6">Cantidad:{product.amount}</Typography>
                   <Typography variant="h6">Precio: ${product.salePrice}</Typography>
                   <Typography variant="h6">SubTotal: ${product.salePrice * product.amount}</Typography>
-                  <Typography variant="h6" style={{ textAlign: "center" }}  >Descripcion del producto: {product.description} </Typography>
                   <hr></hr>
 
                 </CardContent>
               ))}
-              <Typography variant="h6" style={{ textAlign: 'center' }} >Total: ${total}</Typography>
+              <Typography variant="h6" style={{ textAlign: 'center',fontSize:'2rem' }} >Total: ${total}</Typography>
               <Payment productsToSend={productsToSend} total={total} />
 
             </TableContainer>
@@ -286,8 +286,8 @@ function Payment({ total, productsToSend }) {
   const navigate = useNavigate();
 
   const handleSubmitOrder = async (event) => {
-    if (selectedPayment === null) {
-      alert("Debe seleccionar un metodo de pago");
+    if (selectedPayment === "" || selectedPayment === "Seleccione un metodo de pago") {
+      alert("Debes seleccionar un metodo de pago");
       return;
     }
     try {
@@ -384,7 +384,7 @@ function Payment({ total, productsToSend }) {
             ))}
           </Select>
 
-          <Button variant="contained" className="addPayment" color="success" onClick={handlePaymentModalOpen}>
+          <Button variant="contained" style={{marginTop:'10px', marginBottom:'10px'}} className="addPayment" color="success" onClick={handlePaymentModalOpen}>
             añadir un metodo de pago
           </Button>
 

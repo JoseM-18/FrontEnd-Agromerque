@@ -110,7 +110,9 @@ function LoginForm() {
 
             <Button variant="contained" color="success" type='submit'>Entrar</Button>
             <Button variant="contained" color="success" type='submit' onClick={() => navigate('/')}>Cancelar</Button>
+
             </div>
+            <p>¿No tienes una cuenta? <a href="/register">Registrate</a></p>
 
         </form>
             

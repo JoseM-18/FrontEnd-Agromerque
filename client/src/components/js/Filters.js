@@ -82,7 +82,7 @@ function Filters() {
                 <Typography variant='button' htmlFor="category">Categoria</Typography>
                 <select id="category" onChange={handleChangeCategory}>
                     <option value="all">Todas</option>
-                    {categories.map((category) => (
+                    {categories && categories.map((category) => (
                         <option key={category.idCategory} value={category.nameCategory}>{category.nameCategory}</option>
                     ))}
                 </select>

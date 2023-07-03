@@ -26,7 +26,7 @@ function SeeInfo({ idProduct, isOpen, onClose }) {
         borderRadius: '0.5rem',
         marginBottom: '1rem',
         marginTop: '10%',
-        boxShadow: '0 0 40px #086b21',
+        boxShadow: '0 0 40px 0 ',
         fontSize: '1rem', // Ajusta el tamaño de fuente general
         overflow: 'scroll',
         justifyContent: 'center',
